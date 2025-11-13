@@ -18,8 +18,10 @@ import java.util.function.Predicate;
 /**
  * JWT Authentication Gateway Filter.
  * 
- * <p>Validates JWT tokens for all incoming requests (except public endpoints).
- * Extracts tenant context and adds headers for downstream services.</p>
+ * <p>
+ * Validates JWT tokens for all incoming requests (except public endpoints).
+ * Extracts tenant context and adds headers for downstream services.
+ * </p>
  * 
  * @author rjnat
  * @version 1.0.0
@@ -40,8 +42,7 @@ public class AuthenticationGatewayFilter implements GatewayFilter {
             "/api/v1/auth/forgot-password",
             "/api/v1/tenants/signup",
             "/actuator/health",
-            "/actuator/info"
-    );
+            "/actuator/info");
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -56,7 +57,7 @@ public class AuthenticationGatewayFilter implements GatewayFilter {
 
         // Extract Authorization header
         String authHeader = request.getHeaders().getFirst("Authorization");
-        
+
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             log.warn("Missing or invalid Authorization header for path: {}", path);
             return onError(exchange, "Missing or invalid Authorization header", HttpStatus.UNAUTHORIZED);
@@ -65,7 +66,13 @@ public class AuthenticationGatewayFilter implements GatewayFilter {
         String token = authHeader.substring(7);
 
         // Validate JWT token
-        if (!jwtUtil.validateToken(token)) {
+        if (Boolean.FALSE.equals(jwtUtil.validateToken(token))) {
+            log.warn("Invalid or expired JWT token for path: {}", path);
+            return onError(exchange, "Invalid or expired token", HttpStatus.UNAUTHORIZED);
+        }
+
+        // Validate JWT token
+        if (Boolean.FALSE.equals(jwtUtil.validateToken(token))) {
             log.warn("Invalid or expired JWT token for path: {}", path);
             return onError(exchange, "Invalid or expired token", HttpStatus.UNAUTHORIZED);
         }
@@ -119,7 +126,7 @@ public class AuthenticationGatewayFilter implements GatewayFilter {
         Predicate<String> pathPredicate = PUBLIC_ENDPOINTS.stream()
                 .map(pattern -> (Predicate<String>) p -> p.startsWith(pattern))
                 .reduce(p -> false, Predicate::or);
-        
+
         return pathPredicate.test(path);
     }
 
@@ -130,12 +137,11 @@ public class AuthenticationGatewayFilter implements GatewayFilter {
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(status);
         response.getHeaders().add("Content-Type", "application/json");
-        
+
         String errorBody = String.format(
                 "{\"success\":false,\"message\":\"%s\",\"errorCode\":\"%s\"}",
-                message, status.name()
-        );
-        
+                message, status.name());
+
         return response.writeWith(Mono.just(response.bufferFactory().wrap(errorBody.getBytes())));
     }
 }

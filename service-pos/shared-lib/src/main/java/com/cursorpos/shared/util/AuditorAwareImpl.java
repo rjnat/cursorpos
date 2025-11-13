@@ -3,6 +3,7 @@ package com.cursorpos.shared.util;
 import com.cursorpos.shared.security.TenantContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -24,6 +25,8 @@ import java.util.Optional;
 public class AuditorAwareImpl implements AuditorAware<String> {
 
     @Override
+    @NonNull
+    @SuppressWarnings("null")
     public Optional<String> getCurrentAuditor() {
         try {
             String userId = TenantContext.getUserId();

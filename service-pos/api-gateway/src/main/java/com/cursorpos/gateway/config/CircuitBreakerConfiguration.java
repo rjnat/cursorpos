@@ -13,8 +13,10 @@ import java.time.Duration;
 /**
  * Circuit Breaker configuration using Resilience4j.
  * 
- * <p>Configures circuit breakers for fault tolerance and resilience
- * when downstream services are unavailable or slow.</p>
+ * <p>
+ * Configures circuit breakers for fault tolerance and resilience
+ * when downstream services are unavailable or slow.
+ * </p>
  * 
  * @author rjnat
  * @version 1.0.0

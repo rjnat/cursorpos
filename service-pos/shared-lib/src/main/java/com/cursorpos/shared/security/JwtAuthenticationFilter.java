@@ -16,7 +16,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * JWT Authentication Filter.
@@ -66,7 +65,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             // Validate token
-            if (!jwtUtil.validateToken(jwt)) {
+            if (Boolean.FALSE.equals(jwtUtil.validateToken(jwt))) {
                 log.warn("Invalid or expired JWT token");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Invalid or expired token");
@@ -107,7 +106,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 List<SimpleGrantedAuthority> authorities = permissions != null
                         ? permissions.stream()
                                 .map(SimpleGrantedAuthority::new)
-                                .collect(Collectors.toList())
+                                .toList()
                         : List.of();
 
                 // Add role as authority
@@ -141,7 +140,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
         // Skip authentication for public endpoints
         String path = request.getRequestURI();
         return path.startsWith("/api/v1/auth/") ||
