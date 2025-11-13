@@ -21,16 +21,20 @@ import java.util.stream.Collectors;
 /**
  * JWT Authentication Filter.
  * 
- * <p>Intercepts all HTTP requests and validates JWT tokens from the
+ * <p>
+ * Intercepts all HTTP requests and validates JWT tokens from the
  * Authorization header. Extracts tenant context and sets it in
- * {@link TenantContext} for the duration of the request.</p>
+ * {@link TenantContext} for the duration of the request.
+ * </p>
  * 
- * <p>This filter runs once per request and ensures:</p>
+ * <p>
+ * This filter runs once per request and ensures:
+ * </p>
  * <ul>
- *   <li>JWT token is valid and not expired</li>
- *   <li>Tenant context is set for data isolation</li>
- *   <li>User authentication is established in Spring Security context</li>
- *   <li>Context is cleared after request completes</li>
+ * <li>JWT token is valid and not expired</li>
+ * <li>Tenant context is set for data isolation</li>
+ * <li>User authentication is established in Spring Security context</li>
+ * <li>Context is cleared after request completes</li>
  * </ul>
  * 
  * @author rjnat
@@ -48,9 +52,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain
-    ) throws ServletException, IOException {
-        
+            @NonNull FilterChain filterChain) throws ServletException, IOException {
+
         try {
             // Extract JWT token from Authorization header
             final String authHeader = request.getHeader("Authorization");
@@ -96,7 +99,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 TenantContext.setBranchId(branchId);
             }
 
-            log.debug("Tenant context set - Tenant: {}, User: {}, Store: {}, Branch: {}", 
+            log.debug("Tenant context set - Tenant: {}, User: {}, Store: {}, Branch: {}",
                     tenantId, userId, storeId, branchId);
 
             // Set Spring Security authentication
@@ -115,12 +118,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userId,
                         null,
-                        authorities
-                );
+                        authorities);
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
 
-                log.debug("Authentication set for user: {} with role: {} and {} permissions", 
+                log.debug("Authentication set for user: {} with role: {} and {} permissions",
                         userId, role, authorities.size());
             }
 
@@ -143,9 +145,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Skip authentication for public endpoints
         String path = request.getRequestURI();
         return path.startsWith("/api/v1/auth/") ||
-               path.startsWith("/actuator/") ||
-               path.startsWith("/swagger-ui") ||
-               path.startsWith("/v3/api-docs") ||
-               path.equals("/favicon.ico");
+                path.startsWith("/actuator/") ||
+                path.startsWith("/swagger-ui") ||
+                path.startsWith("/v3/api-docs") ||
+                path.equals("/favicon.ico");
     }
 }

@@ -23,8 +23,10 @@ import java.util.Map;
 /**
  * Kafka configuration for event-driven architecture.
  * 
- * <p>Configures Kafka producers and consumers with JSON serialization
- * for event publishing and consumption across microservices.</p>
+ * <p>
+ * Configures Kafka producers and consumers with JSON serialization
+ * for event publishing and consumption across microservices.
+ * </p>
  * 
  * @author rjnat
  * @version 1.0.0
@@ -98,13 +100,11 @@ public class KafkaConfig {
      */
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Object> factory =
-                new ConcurrentKafkaListenerContainerFactory<>();
+        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.setConcurrency(3);
         factory.getContainerProperties().setAckMode(
-                org.springframework.kafka.listener.ContainerProperties.AckMode.MANUAL_IMMEDIATE
-        );
+                org.springframework.kafka.listener.ContainerProperties.AckMode.MANUAL_IMMEDIATE);
         return factory;
     }
 

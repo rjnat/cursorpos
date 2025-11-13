@@ -10,8 +10,10 @@ import java.util.Optional;
 /**
  * Provides current auditor (user) for JPA auditing.
  * 
- * <p>Extracts the current user ID from {@link TenantContext} to automatically
- * populate createdBy and updatedBy fields in entities.</p>
+ * <p>
+ * Extracts the current user ID from {@link TenantContext} to automatically
+ * populate createdBy and updatedBy fields in entities.
+ * </p>
  * 
  * @author rjnat
  * @version 1.0.0

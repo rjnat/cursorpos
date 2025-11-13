@@ -5,7 +5,9 @@ import org.springframework.http.HttpStatus;
 /**
  * Exception thrown when a requested resource is not found.
  * 
- * <p>Maps to HTTP 404 Not Found status.</p>
+ * <p>
+ * Maps to HTTP 404 Not Found status.
+ * </p>
  * 
  * @author rjnat
  * @version 1.0.0

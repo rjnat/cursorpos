@@ -5,14 +5,21 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Thread-local storage for current tenant context.
  * 
- * <p>This class provides a way to store and retrieve the current tenant ID
+ * <p>
+ * This class provides a way to store and retrieve the current tenant ID
  * for the duration of a request. It should be set in the authentication
- * filter after JWT token validation.</p>
+ * filter after JWT token validation.
+ * </p>
  * 
- * <p><b>IMPORTANT:</b> Always call {@link #clear()} in a finally block
- * to prevent memory leaks and tenant data leakage between requests.</p>
+ * <p>
+ * <b>IMPORTANT:</b> Always call {@link #clear()} in a finally block
+ * to prevent memory leaks and tenant data leakage between requests.
+ * </p>
  * 
- * <p>Usage example:</p>
+ * <p>
+ * Usage example:
+ * </p>
+ * 
  * <pre>
  * try {
  *     TenantContext.setTenantId("tenant-123");

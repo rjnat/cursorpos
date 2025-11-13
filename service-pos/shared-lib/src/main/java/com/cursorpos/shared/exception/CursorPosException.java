@@ -6,8 +6,10 @@ import org.springframework.http.HttpStatus;
 /**
  * Base exception class for CursorPOS application.
  * 
- * <p>All custom exceptions should extend this class to ensure
- * consistent error handling and HTTP status code mapping.</p>
+ * <p>
+ * All custom exceptions should extend this class to ensure
+ * consistent error handling and HTTP status code mapping.
+ * </p>
  * 
  * @author rjnat
  * @version 1.0.0
@@ -41,7 +43,7 @@ public class CursorPosException extends RuntimeException {
      * Creates a new exception with message and status.
      * 
      * @param message the error message
-     * @param status the HTTP status code
+     * @param status  the HTTP status code
      */
     public CursorPosException(String message, HttpStatus status) {
         this(message, status, status.name());
@@ -50,8 +52,8 @@ public class CursorPosException extends RuntimeException {
     /**
      * Creates a new exception with all parameters.
      * 
-     * @param message the error message
-     * @param status the HTTP status code
+     * @param message   the error message
+     * @param status    the HTTP status code
      * @param errorCode the error code
      */
     public CursorPosException(String message, HttpStatus status, String errorCode) {
@@ -63,9 +65,9 @@ public class CursorPosException extends RuntimeException {
     /**
      * Creates a new exception with cause.
      * 
-     * @param message the error message
-     * @param cause the underlying cause
-     * @param status the HTTP status code
+     * @param message   the error message
+     * @param cause     the underlying cause
+     * @param status    the HTTP status code
      * @param errorCode the error code
      */
     public CursorPosException(String message, Throwable cause, HttpStatus status, String errorCode) {

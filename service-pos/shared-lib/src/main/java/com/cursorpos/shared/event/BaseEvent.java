@@ -11,8 +11,10 @@ import java.util.UUID;
 /**
  * Base class for all Kafka events.
  * 
- * <p>All domain events should extend this class to ensure consistent
- * event structure with metadata for tracing and auditing.</p>
+ * <p>
+ * All domain events should extend this class to ensure consistent
+ * event structure with metadata for tracing and auditing.
+ * </p>
  * 
  * @author rjnat
  * @version 1.0.0

@@ -17,8 +17,10 @@ import java.util.UUID;
  * Base entity class for all database entities.
  * Provides common fields for auditing, tenant isolation, and soft delete.
  * 
- * <p>All entities should extend this class to ensure consistent
- * audit trails and tenant data isolation.</p>
+ * <p>
+ * All entities should extend this class to ensure consistent
+ * audit trails and tenant data isolation.
+ * </p>
  * 
  * @author rjnat
  * @version 1.0.0
@@ -113,8 +115,10 @@ public abstract class BaseEntity implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof BaseEntity)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof BaseEntity))
+            return false;
         BaseEntity that = (BaseEntity) o;
         return id != null && id.equals(that.getId());
     }

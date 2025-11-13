@@ -16,8 +16,10 @@ import java.util.function.Function;
 /**
  * Utility class for JWT token operations.
  * 
- * <p>Handles JWT token parsing, validation, and claims extraction.
- * Used by authentication filters to extract tenant context from tokens.</p>
+ * <p>
+ * Handles JWT token parsing, validation, and claims extraction.
+ * Used by authentication filters to extract tenant context from tokens.
+ * </p>
  * 
  * @author rjnat
  * @version 1.0.0
@@ -107,9 +109,9 @@ public class JwtUtil {
     /**
      * Generic method to extract any claim from the token.
      * 
-     * @param token the JWT token
+     * @param token          the JWT token
      * @param claimsResolver function to extract specific claim
-     * @param <T> the type of the claim
+     * @param <T>            the type of the claim
      * @return the extracted claim
      */
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {

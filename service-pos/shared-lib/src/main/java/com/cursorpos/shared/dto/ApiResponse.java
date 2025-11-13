@@ -11,10 +11,15 @@ import java.time.Instant;
 /**
  * Standard API response wrapper.
  * 
- * <p>All REST API endpoints should return this wrapper to ensure
- * consistent response structure across all services.</p>
+ * <p>
+ * All REST API endpoints should return this wrapper to ensure
+ * consistent response structure across all services.
+ * </p>
  * 
- * <p>Usage examples:</p>
+ * <p>
+ * Usage examples:
+ * </p>
+ * 
  * <pre>
  * // Success response
  * ApiResponse.success(data, "User created successfully");
@@ -62,16 +67,11 @@ public class ApiResponse<T> {
     private Instant timestamp = Instant.now();
 
     /**
-     * Request path that generated this response.
-     */
-    private String path;
-
-    /**
      * Creates a success response with data and message.
      * 
-     * @param data the response data
+     * @param data    the response data
      * @param message success message
-     * @param <T> the type of data
+     * @param <T>     the type of data
      * @return ApiResponse with success=true
      */
     public static <T> ApiResponse<T> success(T data, String message) {
@@ -87,7 +87,7 @@ public class ApiResponse<T> {
      * Creates a success response with data only.
      * 
      * @param data the response data
-     * @param <T> the type of data
+     * @param <T>  the type of data
      * @return ApiResponse with success=true
      */
     public static <T> ApiResponse<T> success(T data) {
@@ -98,7 +98,7 @@ public class ApiResponse<T> {
      * Creates a success response with message only (no data).
      * 
      * @param message success message
-     * @param <T> the type parameter (can be Void)
+     * @param <T>     the type parameter (can be Void)
      * @return ApiResponse with success=true
      */
     public static <T> ApiResponse<T> success(String message) {
@@ -112,9 +112,9 @@ public class ApiResponse<T> {
     /**
      * Creates an error response with message and error code.
      * 
-     * @param message error message
+     * @param message   error message
      * @param errorCode error code
-     * @param <T> the type parameter (can be Void)
+     * @param <T>       the type parameter (can be Void)
      * @return ApiResponse with success=false
      */
     public static <T> ApiResponse<T> error(String message, String errorCode) {
@@ -130,21 +130,11 @@ public class ApiResponse<T> {
      * Creates an error response with message only.
      * 
      * @param message error message
-     * @param <T> the type parameter (can be Void)
+     * @param <T>     the type parameter (can be Void)
      * @return ApiResponse with success=false
      */
     public static <T> ApiResponse<T> error(String message) {
         return error(message, "INTERNAL_ERROR");
     }
 
-    /**
-     * Sets the request path for this response.
-     * 
-     * @param path the request path
-     * @return this ApiResponse instance
-     */
-    public ApiResponse<T> withPath(String path) {
-        this.path = path;
-        return this;
-    }
 }

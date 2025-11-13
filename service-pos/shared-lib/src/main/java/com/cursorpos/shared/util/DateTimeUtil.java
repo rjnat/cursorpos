@@ -16,8 +16,7 @@ import java.time.format.DateTimeFormatter;
 @UtilityClass
 public class DateTimeUtil {
 
-    private static final DateTimeFormatter ISO_FORMATTER = 
-            DateTimeFormatter.ISO_INSTANT.withZone(ZoneId.of("UTC"));
+    private static final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ISO_INSTANT.withZone(ZoneId.of("UTC"));
 
     /**
      * Formats an Instant to ISO-8601 string.

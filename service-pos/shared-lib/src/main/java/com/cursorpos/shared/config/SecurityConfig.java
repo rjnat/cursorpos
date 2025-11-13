@@ -15,8 +15,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 /**
  * Security configuration for microservices.
  * 
- * <p>Configures JWT-based authentication, stateless session management,
- * and public endpoint access.</p>
+ * <p>
+ * Configures JWT-based authentication, stateless session management,
+ * and public endpoint access.
+ * </p>
  * 
  * @author rjnat
  * @version 1.0.0
@@ -44,11 +46,9 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-resources/**").permitAll()
                         .requestMatchers("/favicon.ico").permitAll()
                         // All other endpoints require authentication
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

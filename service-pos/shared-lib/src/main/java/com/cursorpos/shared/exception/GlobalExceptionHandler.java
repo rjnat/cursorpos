@@ -17,8 +17,10 @@ import java.util.Map;
 /**
  * Global exception handler for REST controllers.
  * 
- * <p>Catches all exceptions thrown by controllers and converts them
- * to standardized {@link ApiResponse} format.</p>
+ * <p>
+ * Catches all exceptions thrown by controllers and converts them
+ * to standardized {@link ApiResponse} format.
+ * </p>
  * 
  * @author rjnat
  * @version 1.0.0
@@ -34,13 +36,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CursorPosException.class)
     public ResponseEntity<ApiResponse<Void>> handleCursorPosException(
             CursorPosException ex,
-            WebRequest request
-    ) {
+            WebRequest request) {
         log.error("CursorPOS exception: {}", ex.getMessage(), ex);
-        
-        ApiResponse<Void> response = ApiResponse.<Void>error(ex.getMessage(), ex.getErrorCode())
-                .withPath(request.getDescription(false));
-        
+
+        ApiResponse<Void> response = ApiResponse.<Void>error(ex.getMessage(), ex.getErrorCode());
+
         return new ResponseEntity<>(response, ex.getStatus());
     }
 
@@ -50,13 +50,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleResourceNotFoundException(
             ResourceNotFoundException ex,
-            WebRequest request
-    ) {
+            WebRequest request) {
         log.warn("Resource not found: {}", ex.getMessage());
-        
-        ApiResponse<Void> response = ApiResponse.<Void>error(ex.getMessage(), "RESOURCE_NOT_FOUND")
-                .withPath(request.getDescription(false));
-        
+
+        ApiResponse<Void> response = ApiResponse.<Void>error(ex.getMessage(), "RESOURCE_NOT_FOUND");
+
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
@@ -66,15 +64,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TenantIsolationException.class)
     public ResponseEntity<ApiResponse<Void>> handleTenantIsolationException(
             TenantIsolationException ex,
-            WebRequest request
-    ) {
+            WebRequest request) {
         log.error("SECURITY ALERT - Tenant isolation violation: {}", ex.getMessage(), ex);
-        
+
         ApiResponse<Void> response = ApiResponse.<Void>error(
                 "Access denied",
-                "TENANT_ISOLATION_VIOLATION"
-        ).withPath(request.getDescription(false));
-        
+                "TENANT_ISOLATION_VIOLATION");
+
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 
@@ -84,25 +80,23 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationException(
             MethodArgumentNotValidException ex,
-            WebRequest request
-    ) {
+            WebRequest request) {
         log.warn("Validation failed: {}", ex.getMessage());
-        
+
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        
+
         ApiResponse<Map<String, String>> response = ApiResponse.<Map<String, String>>builder()
                 .success(false)
                 .message("Validation failed")
                 .errorCode("VALIDATION_ERROR")
                 .data(errors)
-                .build()
-                .withPath(request.getDescription(false));
-        
+                .build();
+
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -112,15 +106,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiResponse<Void>> handleAccessDeniedException(
             AccessDeniedException ex,
-            WebRequest request
-    ) {
+            WebRequest request) {
         log.warn("Access denied: {}", ex.getMessage());
-        
+
         ApiResponse<Void> response = ApiResponse.<Void>error(
                 "Access denied",
-                "ACCESS_DENIED"
-        ).withPath(request.getDescription(false));
-        
+                "ACCESS_DENIED");
+
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 
@@ -130,15 +122,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiResponse<Void>> handleIllegalArgumentException(
             IllegalArgumentException ex,
-            WebRequest request
-    ) {
+            WebRequest request) {
         log.warn("Invalid argument: {}", ex.getMessage());
-        
+
         ApiResponse<Void> response = ApiResponse.<Void>error(
                 ex.getMessage(),
-                "INVALID_ARGUMENT"
-        ).withPath(request.getDescription(false));
-        
+                "INVALID_ARGUMENT");
+
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -148,15 +138,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGenericException(
             Exception ex,
-            WebRequest request
-    ) {
+            WebRequest request) {
         log.error("Unexpected error occurred: {}", ex.getMessage(), ex);
-        
+
         ApiResponse<Void> response = ApiResponse.<Void>error(
                 "An unexpected error occurred. Please try again later.",
-                "INTERNAL_ERROR"
-        ).withPath(request.getDescription(false));
-        
+                "INTERNAL_ERROR");
+
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

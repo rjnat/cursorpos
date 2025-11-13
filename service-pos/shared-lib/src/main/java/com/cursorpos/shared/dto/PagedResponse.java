@@ -10,10 +10,15 @@ import java.util.List;
 /**
  * Paginated response wrapper.
  * 
- * <p>Used for endpoints that return paginated lists of data.
- * Includes pagination metadata for client-side navigation.</p>
+ * <p>
+ * Used for endpoints that return paginated lists of data.
+ * Includes pagination metadata for client-side navigation.
+ * </p>
  * 
- * <p>Usage example:</p>
+ * <p>
+ * Usage example:
+ * </p>
+ * 
  * <pre>
  * Page&lt;User&gt; page = userRepository.findAll(pageable);
  * return PagedResponse.of(page);
@@ -84,11 +89,11 @@ public class PagedResponse<T> {
      * Creates a PagedResponse from Spring Data Page object.
      * 
      * @param page the Spring Data Page
-     * @param <T> the type of content
+     * @param <R> the type of content
      * @return PagedResponse instance
      */
-    public static <T> PagedResponse<T> of(org.springframework.data.domain.Page<T> page) {
-        return PagedResponse.<T>builder()
+    public static <R> PagedResponse<R> of(org.springframework.data.domain.Page<R> page) {
+        return PagedResponse.<R>builder()
                 .content(page.getContent())
                 .pageNumber(page.getNumber())
                 .pageSize(page.getSize())
@@ -105,11 +110,11 @@ public class PagedResponse<T> {
     /**
      * Creates an empty PagedResponse.
      * 
-     * @param <T> the type of content
+     * @param <R> the type of content
      * @return empty PagedResponse
      */
-    public static <T> PagedResponse<T> empty() {
-        return PagedResponse.<T>builder()
+    public static <R> PagedResponse<R> empty() {
+        return PagedResponse.<R>builder()
                 .content(List.of())
                 .pageNumber(0)
                 .pageSize(0)

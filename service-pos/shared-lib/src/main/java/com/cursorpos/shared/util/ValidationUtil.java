@@ -78,6 +78,6 @@ public class ValidationUtil {
         }
         // Allow digits, spaces, dashes, parentheses, and plus sign
         String phoneRegex = "^[+]?[0-9\\s\\-()]+$";
-        return phone.matches(phoneRegex) && phone.replaceAll("[^0-9]", "").length() >= 10;
+        return phone.matches(phoneRegex) && phone.replaceAll("\\D", "").length() >= 10;
     }
 }
