@@ -31,7 +31,8 @@ public class CustomerController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('CUSTOMER_CREATE')")
-    public ResponseEntity<ApiResponse<CustomerResponse>> createCustomer(@Valid @RequestBody CreateCustomerRequest request) {
+    public ResponseEntity<ApiResponse<CustomerResponse>> createCustomer(
+            @Valid @RequestBody CreateCustomerRequest request) {
         CustomerResponse response = customerService.createCustomer(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(response, "Customer created successfully"));

@@ -32,7 +32,8 @@ public class SettingsController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('SETTINGS_WRITE')")
-    public ResponseEntity<ApiResponse<SettingsResponse>> createOrUpdateSetting(@Valid @RequestBody SettingsRequest request) {
+    public ResponseEntity<ApiResponse<SettingsResponse>> createOrUpdateSetting(
+            @Valid @RequestBody SettingsRequest request) {
         SettingsResponse response = settingsService.createOrUpdateSetting(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(response, "Setting saved successfully"));

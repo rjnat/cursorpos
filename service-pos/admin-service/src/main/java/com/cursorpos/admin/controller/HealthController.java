@@ -25,8 +25,7 @@ public class HealthController {
         Map<String, Object> health = Map.of(
                 "service", "admin-service",
                 "status", "UP",
-                "timestamp", Instant.now()
-        );
+                "timestamp", Instant.now());
         return ResponseEntity.ok(ApiResponse.success(health));
     }
 }

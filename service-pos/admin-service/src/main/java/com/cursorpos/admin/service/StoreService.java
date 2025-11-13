@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
+import java.util.Objects;
 
 /**
  * Service for managing stores.
@@ -28,6 +29,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class StoreService {
+
+    private static final String STORE_NOT_FOUND_MSG = "Store not found with ID: ";
 
     private final StoreRepository storeRepository;
     private final AdminMapper adminMapper;
@@ -52,8 +55,9 @@ public class StoreService {
     @Transactional(readOnly = true)
     public StoreResponse getStoreById(UUID id) {
         String tenantId = TenantContext.getTenantId();
+        Objects.requireNonNull(id, "id");
         Store store = storeRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Store not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(STORE_NOT_FOUND_MSG + id));
         return adminMapper.toStoreResponse(store);
     }
 
@@ -78,7 +82,7 @@ public class StoreService {
         log.info("Updating store with ID: {} for tenant: {}", id, tenantId);
 
         Store store = storeRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Store not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(STORE_NOT_FOUND_MSG + id));
 
         adminMapper.updateStoreFromRequest(request, store);
         Store updated = storeRepository.save(store);
@@ -93,7 +97,7 @@ public class StoreService {
         log.info("Deleting store with ID: {} for tenant: {}", id, tenantId);
 
         Store store = storeRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Store not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(STORE_NOT_FOUND_MSG + id));
 
         store.softDelete();
         storeRepository.save(store);

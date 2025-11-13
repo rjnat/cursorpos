@@ -27,7 +27,8 @@ public interface CustomerRepository extends JpaRepository<Customer, UUID> {
 
     Page<Customer> findByTenantIdAndIsActiveAndDeletedAtIsNull(String tenantId, Boolean isActive, Pageable pageable);
 
-    Page<Customer> findByTenantIdAndCustomerTypeAndDeletedAtIsNull(String tenantId, String customerType, Pageable pageable);
+    Page<Customer> findByTenantIdAndCustomerTypeAndDeletedAtIsNull(String tenantId, String customerType,
+            Pageable pageable);
 
     boolean existsByTenantIdAndCode(String tenantId, String code);
 

@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.Objects;
 
 /**
  * Service for managing branches.
@@ -29,6 +30,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class BranchService {
+
+    private static final String BRANCH_NOT_FOUND_MSG = "Branch not found with ID: ";
 
     private final BranchRepository branchRepository;
     private final AdminMapper adminMapper;
@@ -53,8 +56,9 @@ public class BranchService {
     @Transactional(readOnly = true)
     public BranchResponse getBranchById(UUID id) {
         String tenantId = TenantContext.getTenantId();
+        Objects.requireNonNull(id, "id");
         Branch branch = branchRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Branch not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(BRANCH_NOT_FOUND_MSG + id));
         return adminMapper.toBranchResponse(branch);
     }
 
@@ -83,7 +87,8 @@ public class BranchService {
     @Transactional(readOnly = true)
     public List<BranchResponse> getActiveBranchesByStore(UUID storeId) {
         String tenantId = TenantContext.getTenantId();
-        List<Branch> branches = branchRepository.findByTenantIdAndStoreIdAndIsActiveAndDeletedAtIsNull(tenantId, storeId, true);
+        List<Branch> branches = branchRepository.findByTenantIdAndStoreIdAndIsActiveAndDeletedAtIsNull(tenantId,
+                storeId, true);
         return branches.stream()
                 .map(adminMapper::toBranchResponse)
                 .toList();
@@ -95,7 +100,7 @@ public class BranchService {
         log.info("Updating branch with ID: {} for tenant: {}", id, tenantId);
 
         Branch branch = branchRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Branch not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(BRANCH_NOT_FOUND_MSG + id));
 
         adminMapper.updateBranchFromRequest(request, branch);
         Branch updated = branchRepository.save(branch);
@@ -110,7 +115,7 @@ public class BranchService {
         log.info("Deleting branch with ID: {} for tenant: {}", id, tenantId);
 
         Branch branch = branchRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Branch not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(BRANCH_NOT_FOUND_MSG + id));
 
         branch.softDelete();
         branchRepository.save(branch);

@@ -8,7 +8,8 @@ import java.time.Instant;
 
 /**
  * Tenant entity representing a business organization.
- * Each tenant is isolated and can have multiple customers, stores, and branches.
+ * Each tenant is isolated and can have multiple customers, stores, and
+ * branches.
  * 
  * @author rjnat
  * @version 1.0.0

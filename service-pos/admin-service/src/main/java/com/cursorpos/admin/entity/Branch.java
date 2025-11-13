@@ -8,7 +8,8 @@ import java.util.UUID;
 
 /**
  * Branch entity representing a sub-location within a store.
- * Branches allow for departmental or location-based organization within a store.
+ * Branches allow for departmental or location-based organization within a
+ * store.
  * 
  * @author rjnat
  * @version 1.0.0

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
+import java.util.Objects;
 
 /**
  * Service for managing customers.
@@ -28,6 +29,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class CustomerService {
+
+    private static final String CUSTOMER_NOT_FOUND_MSG = "Customer not found with ID: ";
 
     private final CustomerRepository customerRepository;
     private final AdminMapper adminMapper;
@@ -52,8 +55,9 @@ public class CustomerService {
     @Transactional(readOnly = true)
     public CustomerResponse getCustomerById(UUID id) {
         String tenantId = TenantContext.getTenantId();
+        Objects.requireNonNull(id, "id");
         Customer customer = customerRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND_MSG + id));
         return adminMapper.toCustomerResponse(customer);
     }
 
@@ -78,7 +82,7 @@ public class CustomerService {
         log.info("Updating customer with ID: {} for tenant: {}", id, tenantId);
 
         Customer customer = customerRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND_MSG + id));
 
         adminMapper.updateCustomerFromRequest(request, customer);
         Customer updated = customerRepository.save(customer);
@@ -93,7 +97,7 @@ public class CustomerService {
         log.info("Deleting customer with ID: {} for tenant: {}", id, tenantId);
 
         Customer customer = customerRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND_MSG + id));
 
         customer.softDelete();
         customerRepository.save(customer);
@@ -105,7 +109,7 @@ public class CustomerService {
     public CustomerResponse addLoyaltyPoints(UUID id, Integer points) {
         String tenantId = TenantContext.getTenantId();
         Customer customer = customerRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND_MSG + id));
 
         customer.setLoyaltyPoints(customer.getLoyaltyPoints() + points);
         Customer updated = customerRepository.save(customer);

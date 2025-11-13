@@ -14,11 +14,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
  * Service for managing tenants.
- * 
+ *
  * @author rjnat
  * @version 1.0.0
  * @since 2025-11-13
@@ -27,6 +28,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class TenantService {
+
+    private static final String TENANT_NOT_FOUND_MSG = "Tenant not found with ID: ";
 
     private final TenantRepository tenantRepository;
     private final AdminMapper adminMapper;
@@ -45,7 +48,7 @@ public class TenantService {
 
         Tenant tenant = adminMapper.toTenant(request);
         tenant.setTenantId(tenant.getCode());
-        Tenant saved = tenantRepository.save(tenant);
+        Tenant saved = Objects.requireNonNull(tenantRepository.save(tenant));
 
         log.info("Tenant created successfully with ID: {}", saved.getId());
         return adminMapper.toTenantResponse(saved);
@@ -53,8 +56,9 @@ public class TenantService {
 
     @Transactional(readOnly = true)
     public TenantResponse getTenantById(UUID id) {
+        Objects.requireNonNull(id, "id");
         Tenant tenant = tenantRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Tenant not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(TENANT_NOT_FOUND_MSG + id));
         return adminMapper.toTenantResponse(tenant);
     }
 
@@ -75,8 +79,9 @@ public class TenantService {
     public TenantResponse updateTenant(UUID id, CreateTenantRequest request) {
         log.info("Updating tenant with ID: {}", id);
 
+        Objects.requireNonNull(id, "id");
         Tenant tenant = tenantRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Tenant not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(TENANT_NOT_FOUND_MSG + id));
 
         adminMapper.updateTenantFromRequest(request, tenant);
         Tenant updated = tenantRepository.save(tenant);
@@ -89,8 +94,9 @@ public class TenantService {
     public void deleteTenant(UUID id) {
         log.info("Deleting tenant with ID: {}", id);
 
+        Objects.requireNonNull(id, "id");
         Tenant tenant = tenantRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Tenant not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(TENANT_NOT_FOUND_MSG + id));
 
         tenant.softDelete();
         tenantRepository.save(tenant);
@@ -100,21 +106,23 @@ public class TenantService {
 
     @Transactional
     public TenantResponse activateTenant(UUID id) {
+        Objects.requireNonNull(id, "id");
         Tenant tenant = tenantRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Tenant not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(TENANT_NOT_FOUND_MSG + id));
 
         tenant.setIsActive(true);
-        Tenant updated = tenantRepository.save(tenant);
+        Tenant updated = Objects.requireNonNull(tenantRepository.save(tenant));
         return adminMapper.toTenantResponse(updated);
     }
 
     @Transactional
     public TenantResponse deactivateTenant(UUID id) {
+        Objects.requireNonNull(id, "id");
         Tenant tenant = tenantRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Tenant not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(TENANT_NOT_FOUND_MSG + id));
 
         tenant.setIsActive(false);
-        Tenant updated = tenantRepository.save(tenant);
+        Tenant updated = Objects.requireNonNull(tenantRepository.save(tenant));
         return adminMapper.toTenantResponse(updated);
     }
 }

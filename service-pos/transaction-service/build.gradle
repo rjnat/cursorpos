@@ -1,0 +1,13 @@
+// Minimal build.gradle for placeholder module
+// Disables bootJar so root subprojects Spring Boot plugin doesn't fail
+plugins {
+    id 'java'
+}
+
+tasks.withType(org.springframework.boot.gradle.tasks.bundling.BootJar) {
+    enabled = false
+}
+
+dependencies {
+    // keep module lightweight; real implementation will be added in future batches
+}

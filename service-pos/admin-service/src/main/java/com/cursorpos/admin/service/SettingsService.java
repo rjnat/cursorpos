@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.Objects;
 
 /**
  * Service for managing settings.
@@ -52,7 +53,7 @@ public class SettingsService {
             adminMapper.updateSettingsFromRequest(request, settings);
         }
 
-        Settings saved = settingsRepository.save(settings);
+        Settings saved = Objects.requireNonNull(settingsRepository.save(settings));
         log.info("Setting saved successfully with ID: {}", saved.getId());
         return adminMapper.toSettingsResponse(saved);
     }
@@ -85,7 +86,7 @@ public class SettingsService {
     public void deleteSetting(UUID id) {
         String tenantId = TenantContext.getTenantId();
         log.info("Deleting setting with ID: {} for tenant: {}", id, tenantId);
-
+        Objects.requireNonNull(id, "id");
         Settings settings = settingsRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Setting not found with ID: " + id));
 
