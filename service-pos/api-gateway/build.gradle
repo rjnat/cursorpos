@@ -1,0 +1,31 @@
+plugins {
+    id 'org.springframework.boot'
+}
+
+dependencies {
+    implementation project(':shared-lib')
+    
+    // Spring Cloud Gateway
+    implementation 'org.springframework.cloud:spring-cloud-starter-gateway:4.1.0'
+    
+    // Spring Boot Actuator for health checks
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    
+    // Resilience4j for circuit breaker
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j:3.1.0'
+    
+    // Redis for rate limiting
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+    
+    // Webflux (required for Gateway)
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    
+    // Micrometer for metrics
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+}
+
+// Gateway doesn't need a separate JAR
+bootJar {
+    enabled = true
+    archiveFileName = 'api-gateway.jar'
+}
