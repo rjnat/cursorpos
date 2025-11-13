@@ -1,0 +1,26 @@
+// ==============================================================================
+// CursorPOS - Gradle Settings
+// ==============================================================================
+// Generated: 2025-11-13 06:57:25 UTC
+// Author: rjnat
+// ==============================================================================
+
+rootProject.name = 'cursorpos-services'
+
+// Shared library
+include 'shared-lib'
+
+// Microservices
+include 'api-gateway'
+include 'identity-service'
+include 'admin-service'
+include 'product-service'
+include 'transaction-service'
+
+// Module paths
+project(':shared-lib').projectDir = file('shared-lib')
+project(':api-gateway').projectDir = file('api-gateway')
+project(':identity-service').projectDir = file('identity-service')
+project(':admin-service').projectDir = file('admin-service')
+project(':product-service').projectDir = file('product-service')
+project(':transaction-service').projectDir = file('transaction-service')
