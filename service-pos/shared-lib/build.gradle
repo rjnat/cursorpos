@@ -1,0 +1,46 @@
+plugins {
+    id 'java-library'
+}
+
+bootJar.enabled = false
+jar.enabled = true
+
+dependencies {
+    // Spring Boot Starters
+    api 'org.springframework.boot:spring-boot-starter-web'
+    api 'org.springframework.boot:spring-boot-starter-data-jpa'
+    api 'org.springframework.boot:spring-boot-starter-validation'
+    api 'org.springframework.boot:spring-boot-starter-security'
+    api 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    api 'org.springframework.boot:spring-boot-starter-cache'
+    api 'org.springframework.boot:spring-boot-starter-actuator'
+    
+    // Kafka
+    api 'org.springframework.kafka:spring-kafka'
+    
+    // Redis
+    api 'org.springframework.boot:spring-boot-starter-data-redis'
+    
+    // Database
+    api 'org.postgresql:postgresql'
+    api "org.flywaydb:flyway-core:10.4.1"
+    api "org.flywaydb:flyway-database-postgresql:10.4.1"
+    
+    // JWT
+    api "io.jsonwebtoken:jjwt-api:0.12.3"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:0.12.3"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:0.12.3"
+    
+    // API Documentation
+    api "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0"
+    
+    // MapStruct for DTO mapping
+    api 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    
+    // Apache Commons
+    api 'org.apache.commons:commons-lang3:3.14.0'
+    
+    // Jackson for JSON
+    api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+}
