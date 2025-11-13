@@ -6,6 +6,7 @@ import com.cursorpos.product.entity.Inventory;
 import com.cursorpos.product.entity.PriceHistory;
 import com.cursorpos.product.entity.Product;
 import org.mapstruct.*;
+import org.mapstruct.ReportingPolicy;
 
 /**
  * MapStruct mapper for Product domain entities and DTOs.
@@ -14,7 +15,8 @@ import org.mapstruct.*;
  * @version 1.0.0
  * @since 2025-11-13
  */
-@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+    unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ProductMapper {
 
     // Category mappings
@@ -72,7 +74,7 @@ public interface ProductMapper {
         if (inventory.getReorderPoint() == null) {
             return false;
         }
-        return inventory.getQuantityAvailable() != null && 
-               inventory.getQuantityAvailable() < inventory.getReorderPoint();
+        return inventory.getQuantityAvailable() != null &&
+                inventory.getQuantityAvailable() < inventory.getReorderPoint();
     }
 }
