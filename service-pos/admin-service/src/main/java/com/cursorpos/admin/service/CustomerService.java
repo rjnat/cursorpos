@@ -88,6 +88,7 @@ public class CustomerService {
                 .orElseThrow(() -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND_MSG + id));
 
         adminMapper.updateCustomerFromRequest(request, customer);
+        Objects.requireNonNull(customer, "customer");
         Customer updated = customerRepository.save(customer);
 
         log.info("Customer updated successfully with ID: {}", updated.getId());

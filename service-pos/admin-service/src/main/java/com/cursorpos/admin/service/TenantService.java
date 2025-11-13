@@ -30,12 +30,14 @@ import java.util.UUID;
 public class TenantService {
 
     private static final String TENANT_NOT_FOUND_MSG = "Tenant not found with ID: ";
+    private static final String ENTITY_NAME = "tenant";
 
     private final TenantRepository tenantRepository;
     private final AdminMapper adminMapper;
 
     @Transactional
     public TenantResponse createTenant(CreateTenantRequest request) {
+        Objects.requireNonNull(request, "request");
         log.info("Creating tenant with code: {}", request.getCode());
 
         if (tenantRepository.existsByCode(request.getCode())) {
@@ -48,7 +50,8 @@ public class TenantService {
 
         Tenant tenant = adminMapper.toTenant(request);
         tenant.setTenantId(tenant.getCode());
-        Tenant saved = Objects.requireNonNull(tenantRepository.save(tenant));
+        Objects.requireNonNull(tenant, ENTITY_NAME);
+        Tenant saved = tenantRepository.save(tenant);
 
         log.info("Tenant created successfully with ID: {}", saved.getId());
         return adminMapper.toTenantResponse(saved);
@@ -80,10 +83,12 @@ public class TenantService {
         log.info("Updating tenant with ID: {}", id);
 
         Objects.requireNonNull(id, "id");
+        Objects.requireNonNull(request, "request");
         Tenant tenant = tenantRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new ResourceNotFoundException(TENANT_NOT_FOUND_MSG + id));
 
         adminMapper.updateTenantFromRequest(request, tenant);
+        Objects.requireNonNull(tenant, ENTITY_NAME);
         Tenant updated = tenantRepository.save(tenant);
 
         log.info("Tenant updated successfully with ID: {}", updated.getId());
@@ -99,6 +104,7 @@ public class TenantService {
                 .orElseThrow(() -> new ResourceNotFoundException(TENANT_NOT_FOUND_MSG + id));
 
         tenant.softDelete();
+        Objects.requireNonNull(tenant, ENTITY_NAME);
         tenantRepository.save(tenant);
 
         log.info("Tenant soft-deleted successfully with ID: {}", id);
@@ -111,7 +117,8 @@ public class TenantService {
                 .orElseThrow(() -> new ResourceNotFoundException(TENANT_NOT_FOUND_MSG + id));
 
         tenant.setIsActive(true);
-        Tenant updated = Objects.requireNonNull(tenantRepository.save(tenant));
+        Objects.requireNonNull(tenant, ENTITY_NAME);
+        Tenant updated = tenantRepository.save(tenant);
         return adminMapper.toTenantResponse(updated);
     }
 
@@ -122,7 +129,8 @@ public class TenantService {
                 .orElseThrow(() -> new ResourceNotFoundException(TENANT_NOT_FOUND_MSG + id));
 
         tenant.setIsActive(false);
-        Tenant updated = Objects.requireNonNull(tenantRepository.save(tenant));
+        Objects.requireNonNull(tenant, ENTITY_NAME);
+        Tenant updated = tenantRepository.save(tenant);
         return adminMapper.toTenantResponse(updated);
     }
 }

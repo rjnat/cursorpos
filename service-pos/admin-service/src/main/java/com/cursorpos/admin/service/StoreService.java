@@ -85,6 +85,7 @@ public class StoreService {
                 .orElseThrow(() -> new ResourceNotFoundException(STORE_NOT_FOUND_MSG + id));
 
         adminMapper.updateStoreFromRequest(request, store);
+        Objects.requireNonNull(store, "store");
         Store updated = storeRepository.save(store);
 
         log.info("Store updated successfully with ID: {}", updated.getId());

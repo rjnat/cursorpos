@@ -38,6 +38,7 @@ public class BranchService {
 
     @Transactional
     public BranchResponse createBranch(CreateBranchRequest request) {
+        Objects.requireNonNull(request, "request");
         String tenantId = TenantContext.getTenantId();
         log.info("Creating branch with code: {} for tenant: {}", request.getCode(), tenantId);
 
@@ -98,11 +99,14 @@ public class BranchService {
     public BranchResponse updateBranch(UUID id, CreateBranchRequest request) {
         String tenantId = TenantContext.getTenantId();
         log.info("Updating branch with ID: {} for tenant: {}", id, tenantId);
+        Objects.requireNonNull(id, "id");
+        Objects.requireNonNull(request, "request");
 
         Branch branch = branchRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
                 .orElseThrow(() -> new ResourceNotFoundException(BRANCH_NOT_FOUND_MSG + id));
 
         adminMapper.updateBranchFromRequest(request, branch);
+        Objects.requireNonNull(branch, "branch");
         Branch updated = branchRepository.save(branch);
 
         log.info("Branch updated successfully with ID: {}", updated.getId());
@@ -114,6 +118,7 @@ public class BranchService {
         String tenantId = TenantContext.getTenantId();
         log.info("Deleting branch with ID: {} for tenant: {}", id, tenantId);
 
+        Objects.requireNonNull(id, "id");
         Branch branch = branchRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
                 .orElseThrow(() -> new ResourceNotFoundException(BRANCH_NOT_FOUND_MSG + id));
 

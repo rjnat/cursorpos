@@ -53,7 +53,7 @@ public class SettingsService {
             adminMapper.updateSettingsFromRequest(request, settings);
         }
 
-        Settings saved = Objects.requireNonNull(settingsRepository.save(settings));
+        Settings saved = settingsRepository.save(settings);
         log.info("Setting saved successfully with ID: {}", saved.getId());
         return adminMapper.toSettingsResponse(saved);
     }
