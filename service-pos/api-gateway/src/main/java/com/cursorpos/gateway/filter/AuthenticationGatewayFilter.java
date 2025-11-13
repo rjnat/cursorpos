@@ -133,6 +133,7 @@ public class AuthenticationGatewayFilter implements GatewayFilter {
     /**
      * Returns an error response.
      */
+    @SuppressWarnings("null")
     private Mono<Void> onError(ServerWebExchange exchange, String message, HttpStatus status) {
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(status);

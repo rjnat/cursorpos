@@ -73,6 +73,7 @@ public class KafkaConfig {
      * Kafka template for sending events.
      */
     @Bean
+    @SuppressWarnings("null")
     public KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
@@ -99,6 +100,7 @@ public class KafkaConfig {
      * Kafka listener container factory for event consumers.
      */
     @Bean
+    @SuppressWarnings("null")
     public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());

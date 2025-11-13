@@ -34,6 +34,7 @@ public class GlobalExceptionHandler {
      * Handles CursorPosException and its subclasses.
      */
     @ExceptionHandler(CursorPosException.class)
+    @SuppressWarnings("null")
     public ResponseEntity<ApiResponse<Void>> handleCursorPosException(
             CursorPosException ex,
             WebRequest request) {
