@@ -37,6 +37,7 @@ public class CustomerService {
 
     @Transactional
     public CustomerResponse createCustomer(CreateCustomerRequest request) {
+        Objects.requireNonNull(request, "request");
         String tenantId = TenantContext.getTenantId();
         log.info("Creating customer with code: {} for tenant: {}", request.getCode(), tenantId);
 
@@ -80,6 +81,8 @@ public class CustomerService {
     public CustomerResponse updateCustomer(UUID id, CreateCustomerRequest request) {
         String tenantId = TenantContext.getTenantId();
         log.info("Updating customer with ID: {} for tenant: {}", id, tenantId);
+        Objects.requireNonNull(id, "id");
+        Objects.requireNonNull(request, "request");
 
         Customer customer = customerRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
                 .orElseThrow(() -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND_MSG + id));
@@ -95,6 +98,7 @@ public class CustomerService {
     public void deleteCustomer(UUID id) {
         String tenantId = TenantContext.getTenantId();
         log.info("Deleting customer with ID: {} for tenant: {}", id, tenantId);
+        Objects.requireNonNull(id, "id");
 
         Customer customer = customerRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
                 .orElseThrow(() -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND_MSG + id));
@@ -108,10 +112,14 @@ public class CustomerService {
     @Transactional
     public CustomerResponse addLoyaltyPoints(UUID id, Integer points) {
         String tenantId = TenantContext.getTenantId();
+        Objects.requireNonNull(id, "id");
+        Objects.requireNonNull(points, "points");
+
         Customer customer = customerRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
                 .orElseThrow(() -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND_MSG + id));
 
-        customer.setLoyaltyPoints(customer.getLoyaltyPoints() + points);
+        Integer current = Objects.requireNonNullElse(customer.getLoyaltyPoints(), 0);
+        customer.setLoyaltyPoints(current + points);
         Customer updated = customerRepository.save(customer);
         return adminMapper.toCustomerResponse(updated);
     }
