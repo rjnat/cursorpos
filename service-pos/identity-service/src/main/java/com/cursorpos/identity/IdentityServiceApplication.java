@@ -7,16 +7,20 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 /**
  * Identity Service Application.
  * 
- * <p>Handles authentication, user management, roles, and permissions
- * for the CursorPOS multi-tenant system.</p>
+ * <p>
+ * Handles authentication, user management, roles, and permissions
+ * for the CursorPOS multi-tenant system.
+ * </p>
  * 
- * <p>Runs on port 8081.</p>
+ * <p>
+ * Runs on port 8081.
+ * </p>
  * 
  * @author rjnat
  * @version 1.0.0
  * @since 2025-11-13
  */
-@SpringBootApplication(scanBasePackages = {"com.cursorpos.identity", "com.cursorpos.shared"})
+@SpringBootApplication(scanBasePackages = { "com.cursorpos.identity", "com.cursorpos.shared" })
 @EnableJpaAuditing
 public class IdentityServiceApplication {
 
