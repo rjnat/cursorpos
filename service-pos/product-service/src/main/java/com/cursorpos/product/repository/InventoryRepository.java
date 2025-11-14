@@ -24,7 +24,8 @@ public interface InventoryRepository extends JpaRepository<Inventory, UUID> {
 
     Optional<Inventory> findByIdAndTenantIdAndDeletedAtIsNull(UUID id, String tenantId);
 
-    Optional<Inventory> findByTenantIdAndProductIdAndBranchIdAndDeletedAtIsNull(String tenantId, UUID productId, UUID branchId);
+    Optional<Inventory> findByTenantIdAndProductIdAndBranchIdAndDeletedAtIsNull(String tenantId, UUID productId,
+            UUID branchId);
 
     Page<Inventory> findByTenantIdAndDeletedAtIsNull(String tenantId, Pageable pageable);
 
@@ -33,10 +34,10 @@ public interface InventoryRepository extends JpaRepository<Inventory, UUID> {
     List<Inventory> findByTenantIdAndProductIdAndDeletedAtIsNull(String tenantId, UUID productId);
 
     @Query("SELECT i FROM Inventory i WHERE i.tenantId = :tenantId AND i.deletedAt IS NULL " +
-           "AND i.quantityAvailable < i.reorderPoint")
+            "AND i.quantityAvailable < i.reorderPoint")
     List<Inventory> findLowStockItems(@Param("tenantId") String tenantId);
 
     @Query("SELECT i FROM Inventory i WHERE i.tenantId = :tenantId AND i.branchId = :branchId " +
-           "AND i.deletedAt IS NULL AND i.quantityAvailable < i.reorderPoint")
+            "AND i.deletedAt IS NULL AND i.quantityAvailable < i.reorderPoint")
     List<Inventory> findLowStockItemsByBranch(@Param("tenantId") String tenantId, @Param("branchId") UUID branchId);
 }

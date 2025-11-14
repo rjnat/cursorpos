@@ -15,10 +15,10 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "products", indexes = {
-    @Index(name = "idx_product_tenant", columnList = "tenant_id"),
-    @Index(name = "idx_product_code", columnList = "tenant_id,code"),
-    @Index(name = "idx_product_sku", columnList = "tenant_id,sku"),
-    @Index(name = "idx_product_category", columnList = "tenant_id,category_id")
+        @Index(name = "idx_product_tenant", columnList = "tenant_id"),
+        @Index(name = "idx_product_code", columnList = "tenant_id,code"),
+        @Index(name = "idx_product_sku", columnList = "tenant_id,sku"),
+        @Index(name = "idx_product_category", columnList = "tenant_id,category_id")
 })
 @Getter
 @Setter

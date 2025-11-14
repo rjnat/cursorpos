@@ -63,8 +63,10 @@ public class ProductService {
         product.setTenantId(tenantId);
 
         if (request.getCategoryId() != null) {
-            Category category = categoryRepository.findByIdAndTenantIdAndDeletedAtIsNull(request.getCategoryId(), tenantId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + request.getCategoryId()));
+            Category category = categoryRepository
+                    .findByIdAndTenantIdAndDeletedAtIsNull(request.getCategoryId(), tenantId)
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Category not found with ID: " + request.getCategoryId()));
             product.setCategory(category);
         }
 
@@ -122,7 +124,8 @@ public class ProductService {
     public PagedResponse<ProductResponse> getProductsByCategory(UUID categoryId, Pageable pageable) {
         Objects.requireNonNull(categoryId, "categoryId");
         String tenantId = TenantContext.getTenantId();
-        Page<Product> page = productRepository.findByTenantIdAndCategoryIdAndDeletedAtIsNull(tenantId, categoryId, pageable);
+        Page<Product> page = productRepository.findByTenantIdAndCategoryIdAndDeletedAtIsNull(tenantId, categoryId,
+                pageable);
         return PagedResponse.of(page.map(productMapper::toProductResponse));
     }
 
@@ -156,9 +159,12 @@ public class ProductService {
 
         productMapper.updateProductFromRequest(request, product);
 
-        if (request.getCategoryId() != null && !request.getCategoryId().equals(product.getCategory() != null ? product.getCategory().getId() : null)) {
-            Category category = categoryRepository.findByIdAndTenantIdAndDeletedAtIsNull(request.getCategoryId(), tenantId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + request.getCategoryId()));
+        if (request.getCategoryId() != null && !request.getCategoryId()
+                .equals(product.getCategory() != null ? product.getCategory().getId() : null)) {
+            Category category = categoryRepository
+                    .findByIdAndTenantIdAndDeletedAtIsNull(request.getCategoryId(), tenantId)
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Category not found with ID: " + request.getCategoryId()));
             product.setCategory(category);
         }
 
@@ -190,7 +196,9 @@ public class ProductService {
         log.info("Product soft-deleted successfully with ID: {}", id);
     }
 
-    private void recordPriceChange(Product product, BigDecimal oldPrice, BigDecimal newPrice, String reason, String changedBy) {
+    @SuppressWarnings("null")
+    private void recordPriceChange(Product product, BigDecimal oldPrice, BigDecimal newPrice, String reason,
+            String changedBy) {
         PriceHistory priceHistory = PriceHistory.builder()
                 .tenantId(product.getTenantId())
                 .product(product)

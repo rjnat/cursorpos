@@ -15,10 +15,10 @@ import java.util.UUID;
  */
 @Entity
 @Table(name = "inventory", indexes = {
-    @Index(name = "idx_inventory_tenant", columnList = "tenant_id"),
-    @Index(name = "idx_inventory_product", columnList = "tenant_id,product_id"),
-    @Index(name = "idx_inventory_branch", columnList = "tenant_id,branch_id"),
-    @Index(name = "idx_inventory_product_branch", columnList = "tenant_id,product_id,branch_id", unique = true)
+        @Index(name = "idx_inventory_tenant", columnList = "tenant_id"),
+        @Index(name = "idx_inventory_product", columnList = "tenant_id,product_id"),
+        @Index(name = "idx_inventory_branch", columnList = "tenant_id,branch_id"),
+        @Index(name = "idx_inventory_product_branch", columnList = "tenant_id,product_id,branch_id", unique = true)
 })
 @Getter
 @Setter

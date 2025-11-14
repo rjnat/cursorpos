@@ -31,14 +31,16 @@ public class InventoryController {
     private final InventoryService inventoryService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<InventoryResponse>> createOrUpdateInventory(@Valid @RequestBody InventoryRequest request) {
+    public ResponseEntity<ApiResponse<InventoryResponse>> createOrUpdateInventory(
+            @Valid @RequestBody InventoryRequest request) {
         InventoryResponse response = inventoryService.createOrUpdateInventory(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(response, "Inventory created/updated successfully"));
     }
 
     @PostMapping("/adjust")
-    public ResponseEntity<ApiResponse<InventoryResponse>> adjustStock(@Valid @RequestBody StockAdjustmentRequest request) {
+    public ResponseEntity<ApiResponse<InventoryResponse>> adjustStock(
+            @Valid @RequestBody StockAdjustmentRequest request) {
         InventoryResponse response = inventoryService.adjustStock(request);
         return ResponseEntity.ok(ApiResponse.success(response, "Stock adjusted successfully"));
     }

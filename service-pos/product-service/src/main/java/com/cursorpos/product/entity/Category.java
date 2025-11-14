@@ -13,9 +13,9 @@ import lombok.*;
  */
 @Entity
 @Table(name = "categories", indexes = {
-    @Index(name = "idx_category_tenant", columnList = "tenant_id"),
-    @Index(name = "idx_category_code", columnList = "tenant_id,code"),
-    @Index(name = "idx_category_parent", columnList = "tenant_id,parent_id")
+        @Index(name = "idx_category_tenant", columnList = "tenant_id"),
+        @Index(name = "idx_category_code", columnList = "tenant_id,code"),
+        @Index(name = "idx_category_parent", columnList = "tenant_id,parent_id")
 })
 @Getter
 @Setter

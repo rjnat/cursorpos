@@ -4,7 +4,8 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/cursorpos_product
     username: postgres
-    password: postgres
+    # Use environment variable to avoid storing credentials in source
+    password: ${DB_PASSWORD:change_me}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

@@ -52,7 +52,8 @@ public class CategoryService {
 
         if (request.getParentId() != null) {
             Category parent = categoryRepository.findByIdAndTenantIdAndDeletedAtIsNull(request.getParentId(), tenantId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Parent category not found with ID: " + request.getParentId()));
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Parent category not found with ID: " + request.getParentId()));
             category.setParent(parent);
         }
 
@@ -118,9 +119,11 @@ public class CategoryService {
 
         productMapper.updateCategoryFromRequest(request, category);
 
-        if (request.getParentId() != null && !request.getParentId().equals(category.getParent()  != null ? category.getParent().getId() : null)) {
+        if (request.getParentId() != null
+                && !request.getParentId().equals(category.getParent() != null ? category.getParent().getId() : null)) {
             Category parent = categoryRepository.findByIdAndTenantIdAndDeletedAtIsNull(request.getParentId(), tenantId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Parent category not found with ID: " + request.getParentId()));
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Parent category not found with ID: " + request.getParentId()));
             category.setParent(parent);
         }
 

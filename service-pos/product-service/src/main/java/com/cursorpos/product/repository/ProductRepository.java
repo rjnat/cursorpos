@@ -37,12 +37,12 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     List<Product> findByTenantIdAndIsActiveAndDeletedAtIsNull(String tenantId, Boolean isActive);
 
     @Query("SELECT p FROM Product p WHERE p.tenantId = :tenantId AND p.deletedAt IS NULL " +
-           "AND (LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%')) " +
-           "OR LOWER(p.code) LIKE LOWER(CONCAT('%', :search, '%')) " +
-           "OR LOWER(p.sku) LIKE LOWER(CONCAT('%', :search, '%')))")
-    Page<Product> searchProducts(@Param("tenantId") String tenantId, 
-                                  @Param("search") String search, 
-                                  Pageable pageable);
+            "AND (LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "OR LOWER(p.code) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "OR LOWER(p.sku) LIKE LOWER(CONCAT('%', :search, '%')))")
+    Page<Product> searchProducts(@Param("tenantId") String tenantId,
+            @Param("search") String search,
+            Pageable pageable);
 
     boolean existsByTenantIdAndCode(String tenantId, String code);
 

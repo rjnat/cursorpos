@@ -37,7 +37,8 @@ public class PriceHistoryService {
     public PagedResponse<PriceHistoryResponse> getPriceHistory(UUID productId, Pageable pageable) {
         Objects.requireNonNull(productId, "productId");
         String tenantId = TenantContext.getTenantId();
-        Page<PriceHistory> page = priceHistoryRepository.findByTenantIdAndProductIdAndDeletedAtIsNull(tenantId, productId, pageable);
+        Page<PriceHistory> page = priceHistoryRepository.findByTenantIdAndProductIdAndDeletedAtIsNull(tenantId,
+                productId, pageable);
         return PagedResponse.of(page.map(productMapper::toPriceHistoryResponse));
     }
 
@@ -46,7 +47,7 @@ public class PriceHistoryService {
         Objects.requireNonNull(productId, "productId");
         String tenantId = TenantContext.getTenantId();
         LocalDateTime effectiveDate = date != null ? date : LocalDateTime.now();
-        
+
         return priceHistoryRepository.findEffectivePrice(tenantId, productId, effectiveDate)
                 .map(productMapper::toPriceHistoryResponse);
     }

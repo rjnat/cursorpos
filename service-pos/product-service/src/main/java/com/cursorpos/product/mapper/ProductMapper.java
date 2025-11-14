@@ -15,8 +15,7 @@ import org.mapstruct.ReportingPolicy;
  * @version 1.0.0
  * @since 2025-11-13
  */
-@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-    unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ProductMapper {
 
     // Category mappings
