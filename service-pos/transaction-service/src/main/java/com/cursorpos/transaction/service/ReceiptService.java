@@ -31,12 +31,14 @@ import java.util.UUID;
 public class ReceiptService {
 
     private static final String RECEIPT_NOT_FOUND_MSG = "Receipt not found with ID: ";
+    private static final String RECEIPT_BORDER = "========================================%n";
 
     private final ReceiptRepository receiptRepository;
     private final TransactionRepository transactionRepository;
     private final TransactionMapper transactionMapper;
 
     @Transactional
+    @SuppressWarnings("null")
     public ReceiptResponse generateReceipt(UUID transactionId) {
         Objects.requireNonNull(transactionId, "transactionId");
         String tenantId = TenantContext.getTenantId();
@@ -114,33 +116,33 @@ public class ReceiptService {
     private String generateReceiptContent(Transaction transaction) {
         // Simple text-based receipt content
         StringBuilder content = new StringBuilder();
-        content.append("========================================\n");
-        content.append("           SALES RECEIPT\n");
-        content.append("========================================\n");
-        content.append(String.format("Transaction: %s\n", transaction.getTransactionNumber()));
-        content.append(String.format("Date: %s\n", 
+        content.append(String.format(RECEIPT_BORDER));
+        content.append(String.format("           SALES RECEIPT%n"));
+        content.append(String.format(RECEIPT_BORDER));
+        content.append(String.format("Transaction: %s%n", transaction.getTransactionNumber()));
+        content.append(String.format("Date: %s%n",
                 transaction.getTransactionDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
-        content.append(String.format("Cashier: %s\n", transaction.getCashierName()));
-        content.append("========================================\n\n");
-        
-        content.append("ITEMS:\n");
+        content.append(String.format("Cashier: %s%n", transaction.getCashierName()));
+        content.append(String.format(RECEIPT_BORDER + "%n"));
+
+        content.append(String.format("ITEMS:%n"));
         transaction.getItems().forEach(item -> {
-            content.append(String.format("%-20s x%d\n", item.getProductName(), item.getQuantity()));
-            content.append(String.format("  @ %s = %s\n", 
+            content.append(String.format("%-20s x%d%n", item.getProductName(), item.getQuantity()));
+            content.append(String.format("  @ %s = %s%n",
                     item.getUnitPrice(), item.getTotalAmount()));
         });
-        
-        content.append("\n========================================\n");
-        content.append(String.format("Subtotal:     %s\n", transaction.getSubtotal()));
-        content.append(String.format("Tax:          %s\n", transaction.getTaxAmount()));
-        content.append(String.format("Discount:     %s\n", transaction.getDiscountAmount()));
-        content.append(String.format("TOTAL:        %s\n", transaction.getTotalAmount()));
-        content.append(String.format("Paid:         %s\n", transaction.getPaidAmount()));
-        content.append(String.format("Change:       %s\n", transaction.getChangeAmount()));
-        content.append("========================================\n");
-        content.append("\n    Thank you for your purchase!\n");
-        content.append("========================================\n");
-        
+
+        content.append(String.format("%n" + RECEIPT_BORDER));
+        content.append(String.format("Subtotal:     %s%n", transaction.getSubtotal()));
+        content.append(String.format("Tax:          %s%n", transaction.getTaxAmount()));
+        content.append(String.format("Discount:     %s%n", transaction.getDiscountAmount()));
+        content.append(String.format("TOTAL:        %s%n", transaction.getTotalAmount()));
+        content.append(String.format("Paid:         %s%n", transaction.getPaidAmount()));
+        content.append(String.format("Change:       %s%n", transaction.getChangeAmount()));
+        content.append(String.format(RECEIPT_BORDER));
+        content.append(String.format("%n    Thank you for your purchase!%n"));
+        content.append(String.format(RECEIPT_BORDER));
+
         return content.toString();
     }
 }

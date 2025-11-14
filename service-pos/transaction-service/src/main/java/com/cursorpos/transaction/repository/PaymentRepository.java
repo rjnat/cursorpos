@@ -22,5 +22,6 @@ public interface PaymentRepository extends JpaRepository<Payment, UUID> {
 
     List<Payment> findByTenantIdAndTransactionIdAndDeletedAtIsNull(String tenantId, UUID transactionId);
 
-    List<Payment> findByTenantIdAndPaymentMethodAndDeletedAtIsNull(String tenantId, Payment.PaymentMethod paymentMethod);
+    List<Payment> findByTenantIdAndPaymentMethodAndDeletedAtIsNull(String tenantId,
+            Payment.PaymentMethod paymentMethod);
 }

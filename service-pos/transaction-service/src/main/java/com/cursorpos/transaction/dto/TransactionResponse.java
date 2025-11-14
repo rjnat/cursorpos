@@ -42,13 +42,13 @@ public class TransactionResponse {
     private String notes;
     private UUID cashierId;
     private String cashierName;
-    
+
     @Builder.Default
     private List<TransactionItemResponse> items = new ArrayList<>();
-    
+
     @Builder.Default
     private List<PaymentResponse> payments = new ArrayList<>();
-    
+
     private Instant createdAt;
     private Instant updatedAt;
 }

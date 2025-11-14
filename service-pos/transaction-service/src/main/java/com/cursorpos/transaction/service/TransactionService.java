@@ -64,19 +64,19 @@ public class TransactionService {
             // Calculate item amounts
             BigDecimal itemSubtotal = itemRequest.getUnitPrice()
                     .multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
-            
-            BigDecimal itemDiscount = itemRequest.getDiscountAmount() != null 
-                    ? itemRequest.getDiscountAmount() 
+
+            BigDecimal itemDiscount = itemRequest.getDiscountAmount() != null
+                    ? itemRequest.getDiscountAmount()
                     : BigDecimal.ZERO;
-            
+
             BigDecimal itemTaxableAmount = itemSubtotal.subtract(itemDiscount);
-            
-            BigDecimal itemTaxRate = itemRequest.getTaxRate() != null 
-                    ? itemRequest.getTaxRate() 
+
+            BigDecimal itemTaxRate = itemRequest.getTaxRate() != null
+                    ? itemRequest.getTaxRate()
                     : BigDecimal.ZERO;
-            
+
             BigDecimal itemTax = itemTaxableAmount.multiply(itemTaxRate).divide(BigDecimal.valueOf(100));
-            
+
             BigDecimal itemTotal = itemTaxableAmount.add(itemTax);
 
             item.setSubtotal(itemSubtotal);
@@ -90,10 +90,10 @@ public class TransactionService {
             totalTax = totalTax.add(itemTax);
         }
 
-        BigDecimal transactionDiscount = request.getDiscountAmount() != null 
-                ? request.getDiscountAmount() 
+        BigDecimal transactionDiscount = request.getDiscountAmount() != null
+                ? request.getDiscountAmount()
                 : BigDecimal.ZERO;
-        
+
         BigDecimal totalAmount = subtotal.subtract(transactionDiscount).add(totalTax);
 
         transaction.setSubtotal(subtotal);
@@ -103,7 +103,7 @@ public class TransactionService {
 
         // Process payments
         BigDecimal totalPaid = BigDecimal.ZERO;
-        
+
         for (PaymentRequest paymentRequest : request.getPayments()) {
             Payment payment = transactionMapper.toPayment(paymentRequest);
             payment.setTenantId(tenantId);
@@ -113,7 +113,7 @@ public class TransactionService {
         }
 
         transaction.setPaidAmount(totalPaid);
-        
+
         // Calculate change
         if (totalPaid.compareTo(totalAmount) >= 0) {
             transaction.setChangeAmount(totalPaid.subtract(totalAmount));
@@ -123,7 +123,7 @@ public class TransactionService {
         Objects.requireNonNull(transaction, ENTITY_NAME);
         Transaction saved = transactionRepository.save(transaction);
 
-        log.info("Transaction created successfully with ID: {} and number: {}", 
+        log.info("Transaction created successfully with ID: {} and number: {}",
                 saved.getId(), saved.getTransactionNumber());
         return transactionMapper.toTransactionResponse(saved);
     }
