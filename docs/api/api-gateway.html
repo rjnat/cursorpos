@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Gateway Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1f2a74 0%, #4b2366 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .meta {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .meta-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .meta-item strong {
+            display: block;
+            color: #1f2a74;
+            margin-bottom: 5px;
+        }
+
+        nav {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        nav h2 {
+            color: #1f2a74;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav ul li {
+            margin: 8px 0;
+        }
+
+        nav ul li a {
+            color: #555;
+            text-decoration: none;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        nav ul li a:hover {
+            background: #f0f0f0;
+            color: #1f2a74;
+            padding-left: 18px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #1f2a74;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #1f2a74;
+            font-size: 1.8em;
+        }
+
+        .section h3 {
+            color: #4b2366;
+            margin: 25px 0 15px 0;
+            font-size: 1.3em;
+        }
+
+        .endpoint {
+            background: #f8f9fa;
+            border-left: 4px solid #1f2a74;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .method {
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: white;
+            font-size: 0.85em;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .method.get {
+            background: #0b3b2d;
+        }
+
+        .method.post {
+            background: #002b5c;
+        }
+
+        .method.put {
+            background: #7a3e00;
+        }
+
+        .method.delete {
+            background: #5b0f0f;
+        }
+
+        .path {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            color: #1f2a74;
+            font-weight: 600;
+        }
+
+        .description {
+            color: #666;
+            margin: 10px 0;
+        }
+
+        .auth-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .auth-badge.public {
+            background: #fff3e0;
+            color: #bf360c;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .code-block pre {
+            margin: 0;
+        }
+
+        .params-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .params-table th {
+            background: #f0f0f0;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #1f2a74;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .params-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .params-table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .status-code {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .status-200 {
+            background: #c8e6c9;
+            color: #1b5e20;
+        }
+
+        .status-201 {
+            background: #b2dfdb;
+            color: #004d40;
+        }
+
+        .status-400 {
+            background: #ffccbc;
+            color: #b71c1c;
+        }
+
+        .status-401 {
+            background: #ffcdd2;
+            color: #b71c1c;
+        }
+
+        .status-404 {
+            background: #f0f4c3;
+            color: #5d4037;
+        }
+
+        .status-500 {
+            background: #d7ccc8;
+            color: #3e2723;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #1976d2;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #f57c00;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #388e3c;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #666;
+            margin-top: 40px;
+            border-top: 1px solid #ddd;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .endpoint-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .meta-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>🚪 API Gateway Documentation</h1>
+        <p>CursorPOS Multi-Tenant Point of Sale System - API Gateway Service</p>
+    </header>
+
+    <div class="container">
+        <!-- Service Metadata -->
+        <div class="meta">
+            <h2 style="color: #1f2a74; margin-bottom: 15px;">Service Information</h2>
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <strong>Service Name</strong>
+                    <span>API Gateway</span>
+                </div>
+                <div class="meta-item">
+                    <strong>Base URL</strong>
+                    <span>http://localhost:8080</span>
+                </div>
+                <div class="meta-item">
+                    <strong>Version</strong>
+                    <span>1.0.0</span>
+                </div>
+                <div class="meta-item">
+                    <strong>Framework</strong>
+                    <span>Spring Cloud Gateway</span>
+                </div>
+                <div class="meta-item">
+                    <strong>Last Updated</strong>
+                    <span>2025-11-22</span>
+                </div>
+                <div class="meta-item">
+                    <strong>Author</strong>
+                    <span>rjnat</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Architecture Overview -->
+        <div class="section">
+            <h2>🏗️ Architecture Overview</h2>
+            <p>The API Gateway serves as the single entry point for all client requests to the CursorPOS microservices
+                ecosystem. It provides:</p>
+
+            <div class="info-box">
+                <h3 style="margin-top: 0; color: #1976d2;">Key Features</h3>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Authentication & Authorization</strong> - JWT token validation with defense-in-depth
+                        approach</li>
+                    <li><strong>Request Routing</strong> - Intelligent routing to appropriate microservices</li>
+                    <li><strong>Tenant Context Propagation</strong> - Automatic extraction and forwarding of tenant
+                        information</li>
+                    <li><strong>Rate Limiting</strong> - Redis-based rate limiting to prevent abuse</li>
+                    <li><strong>Circuit Breaking</strong> - Resilience4j circuit breakers for fault tolerance</li>
+                    <li><strong>CORS Configuration</strong> - Cross-origin resource sharing for web clients</li>
+                    <li><strong>Load Balancing</strong> - Distributes traffic across service instances</li>
+                    <li><strong>Monitoring</strong> - Health checks and Prometheus metrics</li>
+                </ul>
+            </div>
+
+            <h3>Service Routing</h3>
+            <table class="params-table">
+                <thead>
+                    <tr>
+                        <th>Path Pattern</th>
+                        <th>Target Service</th>
+                        <th>Port</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>/api/v1/auth/**</code><br><code>/api/v1/users/**</code></td>
+                        <td>Identity Service</td>
+                        <td>8081</td>
+                        <td>Authentication, user management, roles, permissions</td>
+                    </tr>
+                    <tr>
+                        <td><code>/api/v1/tenants/**</code><br><code>/api/v1/customers/**</code></td>
+                        <td>Admin Service</td>
+                        <td>8082</td>
+                        <td>Tenant management, customers, stores, branches, settings</td>
+                    </tr>
+                    <tr>
+                        <td><code>/api/v1/products/**</code><br><code>/api/v1/inventory/**</code></td>
+                        <td>Product Service</td>
+                        <td>8083</td>
+                        <td>Product catalog, categories, pricing, inventory, suppliers</td>
+                    </tr>
+                    <tr>
+                        <td><code>/api/v1/transactions/**</code><br><code>/api/v1/sales/**</code></td>
+                        <td>Transaction Service</td>
+                        <td>8084</td>
+                        <td>Transactions, sales, payments, receipts, discounts, loyalty</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Authentication -->
+        <div class="section">
+            <h2>🔐 Authentication</h2>
+
+            <div class="warning-box">
+                <h3 style="margin-top: 0; color: #f57c00;">Defense-in-Depth Security</h3>
+                <p>The API Gateway implements a defense-in-depth approach:</p>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Gateway Validation</strong> - First layer validates JWT token and extracts claims</li>
+                    <li><strong>Header Propagation</strong> - Tenant context forwarded via headers (X-Tenant-Id,
+                        X-User-Id, X-User-Role)</li>
+                    <li><strong>Service Re-validation</strong> - Each microservice independently re-validates the JWT
+                        for autonomy</li>
+                </ol>
+            </div>
+
+            <h3>JWT Token Structure</h3>
+            <p>JWT tokens must include the following claims:</p>
+            <div class="code-block">
+                <pre>{
+  "sub": "user-uuid",           // User ID
+  "tenant_id": "tenant-xxx",    // Tenant ID (required)
+  "role": "ADMIN",              // User role
+  "store_id": "store-yyy",      // Store ID (optional)
+  "branch_id": "branch-zzz",    // Branch ID (optional)
+  "permissions": ["..."],       // User permissions
+  "exp": 1700000000,            // Expiration timestamp
+  "iat": 1699999000             // Issued at timestamp
+}</pre>
+            </div>
+
+            <h3>Public Endpoints (No Authentication Required)</h3>
+            <ul style="margin-left: 20px;">
+                <li><code>POST /api/v1/auth/login</code> - User login</li>
+                <li><code>POST /api/v1/auth/register</code> - User registration</li>
+                <li><code>POST /api/v1/auth/refresh</code> - Token refresh</li>
+                <li><code>POST /api/v1/auth/forgot-password</code> - Password reset request</li>
+                <li><code>POST /api/v1/tenants/signup</code> - Tenant self-service signup</li>
+                <li><code>GET /actuator/health</code> - Health check</li>
+                <li><code>GET /actuator/info</code> - Service information</li>
+            </ul>
+
+            <h3>Protected Endpoints</h3>
+            <p>All other endpoints require a valid JWT token in the Authorization header:</p>
+            <div class="code-block">
+                <pre>Authorization: Bearer &lt;jwt-token&gt;</pre>
+            </div>
+        </div>
+
+        <!-- Request Headers -->
+        <div class="section">
+            <h2>📋 Request & Response Headers</h2>
+
+            <h3>Required Request Headers (Protected Endpoints)</h3>
+            <table class="params-table">
+                <thead>
+                    <tr>
+                        <th>Header</th>
+                        <th>Type</th>
+                        <th>Required</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>Authorization</code></td>
+                        <td>string</td>
+                        <td>Yes</td>
+                        <td>JWT token in format: <code>Bearer &lt;token&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Content-Type</code></td>
+                        <td>string</td>
+                        <td>Yes (for POST/PUT)</td>
+                        <td>Typically <code>application/json</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Propagated Headers (Gateway → Services)</h3>
+            <p>The gateway automatically extracts JWT claims and adds these headers for downstream services:</p>
+            <table class="params-table">
+                <thead>
+                    <tr>
+                        <th>Header</th>
+                        <th>Source</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>X-Tenant-Id</code></td>
+                        <td>JWT <code>tenant_id</code> claim</td>
+                        <td>Current tenant context (required)</td>
+                    </tr>
+                    <tr>
+                        <td><code>X-User-Id</code></td>
+                        <td>JWT <code>sub</code> claim</td>
+                        <td>Authenticated user ID</td>
+                    </tr>
+                    <tr>
+                        <td><code>X-User-Role</code></td>
+                        <td>JWT <code>role</code> claim</td>
+                        <td>User's primary role</td>
+                    </tr>
+                    <tr>
+                        <td><code>X-Store-Id</code></td>
+                        <td>JWT <code>store_id</code> claim</td>
+                        <td>Current store context (if applicable)</td>
+                    </tr>
+                    <tr>
+                        <td><code>X-Branch-Id</code></td>
+                        <td>JWT <code>branch_id</code> claim</td>
+                        <td>Current branch context (if applicable)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <strong>Note:</strong> Services can trust these headers as they are set by the gateway after successful
+                JWT validation.
+                However, services also re-validate the JWT token independently for defense-in-depth security.
+            </div>
+        </div>
+
+        <!-- Error Responses -->
+        <div class="section">
+            <h2>⚠️ Error Responses</h2>
+
+            <h3>Authentication Errors</h3>
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="status-code status-401">401</span>
+                    <span>Unauthorized</span>
+                </div>
+                <p class="description">Returned when authentication fails or token is invalid/expired.</p>
+                <div class="code-block">
+                    <pre>{
+  "success": false,
+  "message": "Invalid or expired token",
+  "errorCode": "UNAUTHORIZED"
+}</pre>
+                </div>
+                <p><strong>Common Causes:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Missing Authorization header</li>
+                    <li>Malformed Authorization header (not starting with "Bearer ")</li>
+                    <li>Expired JWT token</li>
+                    <li>Invalid JWT signature</li>
+                    <li>Token missing required claims (especially tenant_id)</li>
+                </ul>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="status-code status-404">404</span>
+                    <span>Not Found</span>
+                </div>
+                <p class="description">Route not found or service unavailable.</p>
+                <div class="code-block">
+                    <pre>{
+  "timestamp": "2025-11-22T10:30:00.000+00:00",
+  "path": "/api/v1/unknown",
+  "status": 404,
+  "error": "Not Found",
+  "message": "No matching route found"
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="status-code status-500">503</span>
+                    <span>Service Unavailable</span>
+                </div>
+                <p class="description">Downstream service is unavailable (circuit breaker open).</p>
+                <div class="code-block">
+                    <pre>{
+  "timestamp": "2025-11-22T10:30:00.000+00:00",
+  "status": 503,
+  "error": "Service Unavailable",
+  "message": "Service temporarily unavailable"
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="status-code status-400">429</span>
+                    <span>Too Many Requests</span>
+                </div>
+                <p class="description">Rate limit exceeded.</p>
+                <div class="code-block">
+                    <pre>{
+  "timestamp": "2025-11-22T10:30:00.000+00:00",
+  "status": 429,
+  "error": "Too Many Requests",
+  "message": "Rate limit exceeded. Please try again later."
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monitoring Endpoints -->
+        <div class="section">
+            <h2>📊 Monitoring & Health Checks</h2>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="path">/actuator/health</span>
+                    <span class="auth-badge public">PUBLIC</span>
+                </div>
+                <p class="description">Gateway health check including circuit breaker status.</p>
+
+                <h4>Response Example</h4>
+                <div class="code-block">
+                    <pre>{
+  "status": "UP",
+  "components": {
+    "diskSpace": {
+      "status": "UP",
+      "details": {
+        "total": 500000000000,
+        "free": 250000000000,
+        "threshold": 10485760,
+        "exists": true
+      }
+    },
+    "ping": {
+      "status": "UP"
+    },
+    "reactiveRedis": {
+      "status": "UP",
+      "details": {
+        "version": "7.0.0"
+      }
+    },
+    "circuitBreakers": {
+      "status": "UP",
+      "details": {
+        "identityCircuitBreaker": "CLOSED",
+        "adminCircuitBreaker": "CLOSED",
+        "productCircuitBreaker": "CLOSED",
+        "transactionCircuitBreaker": "CLOSED"
+      }
+    }
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="path">/actuator/metrics</span>
+                    <span class="auth-badge public">PUBLIC</span>
+                </div>
+                <p class="description">Available metrics for monitoring.</p>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="path">/actuator/prometheus</span>
+                    <span class="auth-badge public">PUBLIC</span>
+                </div>
+                <p class="description">Prometheus metrics endpoint for scraping.</p>
+            </div>
+        </div>
+
+        <!-- Configuration -->
+        <div class="section">
+            <h2>⚙️ Gateway Configuration</h2>
+
+            <h3>Rate Limiting</h3>
+            <p>Redis-based rate limiting is configured per service route:</p>
+            <table class="params-table">
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Replenish Rate</th>
+                        <th>Burst Capacity</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Identity Service</td>
+                        <td>10 req/sec</td>
+                        <td>20 requests</td>
+                        <td>Standard rate for auth operations</td>
+                    </tr>
+                    <tr>
+                        <td>Admin Service</td>
+                        <td>10 req/sec</td>
+                        <td>20 requests</td>
+                        <td>Standard rate for admin operations</td>
+                    </tr>
+                    <tr>
+                        <td>Product Service</td>
+                        <td>20 req/sec</td>
+                        <td>40 requests</td>
+                        <td>Higher rate for frequent catalog queries</td>
+                    </tr>
+                    <tr>
+                        <td>Transaction Service</td>
+                        <td>20 req/sec</td>
+                        <td>40 requests</td>
+                        <td>Higher rate for POS operations</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Circuit Breaker Configuration</h3>
+            <p>Resilience4j circuit breakers protect against cascading failures:</p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Sliding Window Size:</strong> 10 requests</li>
+                <li><strong>Minimum Calls:</strong> 5 (before calculating failure rate)</li>
+                <li><strong>Failure Rate Threshold:</strong> 50%</li>
+                <li><strong>Wait Duration in Open State:</strong> 5 seconds</li>
+                <li><strong>Half-Open Permitted Calls:</strong> 3</li>
+            </ul>
+
+            <h3>Retry Configuration</h3>
+            <p>Automatic retries for transient failures:</p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Max Retries:</strong> 3</li>
+                <li><strong>Retry Statuses:</strong> BAD_GATEWAY, GATEWAY_TIMEOUT</li>
+                <li><strong>Retry Methods:</strong> GET, POST</li>
+                <li><strong>Backoff Strategy:</strong> Exponential (10ms → 50ms)</li>
+            </ul>
+
+            <h3>CORS Configuration</h3>
+            <p>Cross-Origin Resource Sharing settings:</p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Allowed Origins:</strong> http://localhost:5173, http://localhost:5174,
+                    http://localhost:5175</li>
+                <li><strong>Allowed Methods:</strong> GET, POST, PUT, DELETE, PATCH, OPTIONS</li>
+                <li><strong>Allowed Headers:</strong> All (*)</li>
+                <li><strong>Allow Credentials:</strong> true</li>
+                <li><strong>Max Age:</strong> 3600 seconds</li>
+            </ul>
+        </div>
+
+        <!-- Best Practices -->
+        <div class="section">
+            <h2>💡 Best Practices</h2>
+
+            <div class="success-box">
+                <h3 style="margin-top: 0; color: #388e3c;">Security</h3>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Always include the JWT token in the Authorization header for protected endpoints</li>
+                    <li>Tokens should be securely stored (e.g., httpOnly cookies, secure storage)</li>
+                    <li>Implement token refresh mechanism before expiration</li>
+                    <li>Never log or expose JWT tokens in error messages</li>
+                    <li>Validate tenant_id claim is present in all business operations</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h3 style="margin-top: 0; color: #1976d2;">Performance</h3>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Implement client-side caching for frequently accessed data</li>
+                    <li>Use appropriate HTTP methods (GET for read, POST for create, etc.)</li>
+                    <li>Handle rate limiting gracefully with exponential backoff</li>
+                    <li>Monitor circuit breaker status for service health</li>
+                    <li>Keep connections persistent when making multiple requests</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h3 style="margin-top: 0; color: #f57c00;">Error Handling</h3>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Always check response status codes before processing</li>
+                    <li>Implement proper error handling for 401 (refresh token) and 403 (forbidden)</li>
+                    <li>Handle 503 errors as temporary service unavailability</li>
+                    <li>Log error responses for debugging</li>
+                    <li>Provide user-friendly error messages in UI</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Testing -->
+        <div class="section">
+            <h2>🧪 Testing the Gateway</h2>
+
+            <h3>Using cURL</h3>
+            <div class="code-block">
+                <pre># Health Check
+curl http://localhost:8080/actuator/health
+
+# Login (Public Endpoint)
+curl -X POST http://localhost:8080/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"user@example.com","password":"password123"}'
+
+# Access Protected Endpoint
+curl http://localhost:8080/api/v1/products \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+
+# Access with Full Headers
+curl http://localhost:8080/api/v1/transactions \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json"</pre>
+            </div>
+
+            <h3>Using Postman</h3>
+            <ol style="margin-left: 20px;">
+                <li>Set request method and URL (e.g., GET http://localhost:8080/api/v1/products)</li>
+                <li>Go to "Authorization" tab, select "Bearer Token"</li>
+                <li>Paste your JWT token</li>
+                <li>Add Content-Type: application/json to Headers if sending body</li>
+                <li>Send request</li>
+            </ol>
+        </div>
+
+        <!-- Contact & Support -->
+        <div class="section">
+            <h2>📞 Support & Contact</h2>
+            <p>For issues, questions, or feature requests:</p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>Project:</strong> CursorPOS Multi-Tenant POS System</li>
+                <li><strong>Repository:</strong> <a href="https://github.com/rjnat/cursorpos"
+                        style="color: #1f2a74;">github.com/rjnat/cursorpos</a></li>
+                <li><strong>Author:</strong> rjnat</li>
+                <li><strong>Documentation:</strong> See individual service API documentation for detailed endpoint
+                    information</li>
+            </ul>
+
+            <div class="info-box" style="margin-top: 20px;">
+                <h3 style="margin-top: 0; color: #1976d2;">Related Documentation</h3>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><a href="identity-service-api.html" style="color: #1976d2;">Identity Service API</a> -
+                        Authentication, users, roles</li>
+                    <li><a href="product-service-api.html" style="color: #1976d2;">Product Service API</a> - Products,
+                        inventory, pricing</li>
+                    <li><a href="transaction-service-api.html" style="color: #1976d2;">Transaction Service API</a> -
+                        Sales, transactions, receipts</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 CursorPOS. All rights reserved.</p>
+        <p style="margin-top: 10px; font-size: 0.9em;">Generated: 2025-11-22 | Version 1.0.0</p>
+    </footer>
+</body>
+
+</html>

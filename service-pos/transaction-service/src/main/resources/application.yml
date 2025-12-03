@@ -2,9 +2,9 @@ spring:
   application:
     name: transaction-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/cursorpos_transaction
-    username: postgres
-    password: ${DB_PASSWORD:change_me}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:cursorpos}
+    username: ${DB_USER:posuser}
+    password: ${DB_PASSWORD:pos_db_password_2025}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -18,6 +18,7 @@ spring:
     enabled: true
     baseline-on-migrate: true
     locations: classpath:db/migration
+    table: flyway_schema_history_transaction
   kafka:
     bootstrap-servers: localhost:9092
     producer:
@@ -43,11 +44,14 @@ management:
       show-details: always
 
 logging:
+  file:
+    path: ./logs
+    name: ./logs/transaction-service.log
   level:
     com.cursorpos: DEBUG
     org.springframework.web: INFO
     org.hibernate.SQL: DEBUG
 
 jwt:
-  secret: your-secret-key-change-this-in-production
+  secret: ${JWT_SECRET:your-secret-key-here-should-be-at-least-256-bits-long-for-hs256-algorithm}
   expiration: 86400000

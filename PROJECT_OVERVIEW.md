@@ -4,6 +4,8 @@
 
 **CursorPOS** is a comprehensive, multi-tenant Point of Sale (POS) system designed for small and medium businesses. It features a microservices architecture with offline-first capabilities, advanced pricing/discount management, customer loyalty programs, and event-driven communication.
 
+> **📝 Note:** For detailed implementation plan, step-by-step instructions, and current status, see [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)
+
 ---
 
 ## 🎯 Project Goal

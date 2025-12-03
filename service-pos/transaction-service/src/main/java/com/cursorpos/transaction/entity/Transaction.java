@@ -3,6 +3,7 @@ package com.cursorpos.transaction.entity;
 import com.cursorpos.shared.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -30,6 +31,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(callSuper = true)
+@Slf4j
 public class Transaction extends BaseEntity {
 
     @Column(name = "tenant_id", nullable = false, length = 100)
@@ -101,6 +103,23 @@ public class Transaction extends BaseEntity {
         SALE,
         RETURN,
         EXCHANGE
+    }
+
+    @PrePersist
+    @PreUpdate
+    protected void propagateTenantId() {
+        if (this.tenantId != null) {
+            for (TransactionItem item : items) {
+                if (item.getTenantId() == null) {
+                    item.setTenantId(this.tenantId);
+                }
+            }
+            for (Payment payment : payments) {
+                if (payment.getTenantId() == null) {
+                    payment.setTenantId(this.tenantId);
+                }
+            }
+        }
     }
 
     public void addItem(TransactionItem item) {

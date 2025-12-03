@@ -3,6 +3,8 @@ spring:
     name: api-gateway
   
   cloud:
+    compatibility-verifier:
+      enabled: false
     gateway:
       # Global CORS configuration
       globalcors:
@@ -109,15 +111,15 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:redis_secret}
+      password: ${REDIS_PASSWORD:redis_dev_password_2025}
       database: 0
 
-  # Security
+  # Security - OAuth2 Resource Server with Keycloak
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:9080/realms/cursorpos}
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/cursorpos}
 
 # Server configuration
 server:
@@ -128,7 +130,7 @@ server:
 
 # JWT configuration
 jwt:
-  secret: ${JWT_SECRET:your-super-secret-jwt-key-change-this-in-production-minimum-256-bits}
+  secret: ${JWT_SECRET:your-secret-key-here-should-be-at-least-256-bits-long-for-hs256-algorithm}
   expiration: 86400
 
 # Management endpoints

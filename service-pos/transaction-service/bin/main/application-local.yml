@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cursorpos
+    username: posuser
+    password: ${DB_PASSWORD:pos_db_password_2025}
+    driver-class-name: org.postgresql.Driver
+
+jwt:
+  secret: ${JWT_SECRET:cursorpos-jwt-secret-key-2025-minimum-256-bits-required-for-hs256-algorithm-security}

@@ -1,8 +1,11 @@
 package com.cursorpos.identity;
 
+import com.cursorpos.shared.config.SecurityConfig;
+import com.cursorpos.shared.security.JwtAuthenticationFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 
 /**
  * Identity Service Application.
@@ -20,8 +23,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
  * @version 1.0.0
  * @since 2025-11-13
  */
-@SpringBootApplication(scanBasePackages = { "com.cursorpos.identity", "com.cursorpos.shared" })
-@EnableJpaAuditing
+@SpringBootApplication
+@ComponentScan(basePackages = { "com.cursorpos.identity",
+        "com.cursorpos.shared" }, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+                SecurityConfig.class, JwtAuthenticationFilter.class }))
 public class IdentityServiceApplication {
 
     public static void main(String[] args) {

@@ -3,6 +3,8 @@ package com.cursorpos.gateway;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 
 /**
  * API Gateway Application.
@@ -21,7 +23,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * @version 1.0.0
  * @since 2025-11-13
  */
-@SpringBootApplication(scanBasePackages = { "com.cursorpos.gateway", "com.cursorpos.shared" })
+@SpringBootApplication
+@ComponentScan(basePackages = { "com.cursorpos.gateway", "com.cursorpos.shared.util" }, excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com.cursorpos.shared.config.*")
+})
 @EnableDiscoveryClient
 public class ApiGatewayApplication {
 

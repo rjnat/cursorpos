@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -103,12 +104,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // Set Spring Security authentication
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
-                List<SimpleGrantedAuthority> authorities = permissions != null
-                        ? permissions.stream()
-                                .map(SimpleGrantedAuthority::new)
-                                .toList()
-                        : List.of();
-
+                List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+                if (permissions != null) {
+                    permissions.stream()
+                            .map(SimpleGrantedAuthority::new)
+                            .forEach(authorities::add);
+                }
                 // Add role as authority
                 if (role != null) {
                     authorities.add(new SimpleGrantedAuthority("ROLE_" + role));

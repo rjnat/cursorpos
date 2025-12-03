@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -32,13 +33,14 @@ public class ReceiptService {
 
     private static final String RECEIPT_NOT_FOUND_MSG = "Receipt not found with ID: ";
     private static final String RECEIPT_BORDER = "========================================%n";
+    private static final String NON_NULL_RECEIPT = "receipt";
+    private static final String NON_NULL_SAVED = "saved";
 
     private final ReceiptRepository receiptRepository;
     private final TransactionRepository transactionRepository;
     private final TransactionMapper transactionMapper;
 
     @Transactional
-    @SuppressWarnings("null")
     public ReceiptResponse generateReceipt(UUID transactionId) {
         Objects.requireNonNull(transactionId, "transactionId");
         String tenantId = TenantContext.getTenantId();
@@ -48,10 +50,11 @@ public class ReceiptService {
                 .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with ID: " + transactionId));
 
         // Check if receipt already exists
-        receiptRepository.findByTenantIdAndTransactionIdAndDeletedAtIsNull(tenantId, transactionId)
-                .ifPresent(existing -> {
-                    throw new IllegalStateException("Receipt already exists for this transaction");
-                });
+        Optional<Receipt> existingOpt = receiptRepository
+                .findByTenantIdAndTransactionIdAndDeletedAtIsNull(tenantId, transactionId);
+        if (existingOpt.isPresent()) {
+            throw new IllegalStateException("Receipt already exists for this transaction");
+        }
 
         Receipt receipt = Receipt.builder()
                 .tenantId(tenantId)
@@ -63,7 +66,8 @@ public class ReceiptService {
                 .printCount(0)
                 .build();
 
-        Receipt saved = receiptRepository.save(receipt);
+        @SuppressWarnings("null")
+        Receipt saved = Objects.requireNonNull(receiptRepository.save(receipt), NON_NULL_SAVED);
 
         log.info("Receipt generated successfully with number: {}", saved.getReceiptNumber());
         return transactionMapper.toReceiptResponse(saved);
@@ -73,8 +77,10 @@ public class ReceiptService {
     public ReceiptResponse getReceiptById(UUID id) {
         Objects.requireNonNull(id, "id");
         String tenantId = TenantContext.getTenantId();
-        Receipt receipt = receiptRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
-                .orElseThrow(() -> new ResourceNotFoundException(RECEIPT_NOT_FOUND_MSG + id));
+        Receipt receipt = Objects.requireNonNull(
+                receiptRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
+                        .orElseThrow(() -> new ResourceNotFoundException(RECEIPT_NOT_FOUND_MSG + id)),
+                NON_NULL_RECEIPT);
         return transactionMapper.toReceiptResponse(receipt);
     }
 
@@ -82,9 +88,11 @@ public class ReceiptService {
     public ReceiptResponse getReceiptByTransaction(UUID transactionId) {
         Objects.requireNonNull(transactionId, "transactionId");
         String tenantId = TenantContext.getTenantId();
-        Receipt receipt = receiptRepository.findByTenantIdAndTransactionIdAndDeletedAtIsNull(tenantId, transactionId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Receipt not found for transaction ID: " + transactionId));
+        Receipt receipt = Objects.requireNonNull(
+                receiptRepository.findByTenantIdAndTransactionIdAndDeletedAtIsNull(tenantId, transactionId)
+                        .orElseThrow(() -> new ResourceNotFoundException(
+                                "Receipt not found for transaction ID: " + transactionId)),
+                NON_NULL_RECEIPT);
         return transactionMapper.toReceiptResponse(receipt);
     }
 
@@ -94,13 +102,15 @@ public class ReceiptService {
         String tenantId = TenantContext.getTenantId();
         log.info("Printing receipt with ID: {}", id);
 
-        Receipt receipt = receiptRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
-                .orElseThrow(() -> new ResourceNotFoundException(RECEIPT_NOT_FOUND_MSG + id));
+        Receipt receipt = Objects.requireNonNull(
+                receiptRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
+                        .orElseThrow(() -> new ResourceNotFoundException(RECEIPT_NOT_FOUND_MSG + id)),
+                NON_NULL_RECEIPT);
 
         receipt.setPrintCount(receipt.getPrintCount() + 1);
         receipt.setLastPrintedAt(LocalDateTime.now());
 
-        Receipt updated = receiptRepository.save(receipt);
+        Receipt updated = Objects.requireNonNull(receiptRepository.save(receipt), "updated");
 
         log.info("Receipt printed. Print count: {}", updated.getPrintCount());
         return transactionMapper.toReceiptResponse(updated);

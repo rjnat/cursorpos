@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Service API Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1f2a74 0%, #4b2366 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .meta {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .meta-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .meta-item strong {
+            display: block;
+            color: #1f2a74;
+            margin-bottom: 5px;
+        }
+
+        nav {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        nav h2 {
+            color: #1f2a74;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav ul li {
+            margin: 8px 0;
+        }
+
+        nav ul li a {
+            color: #555;
+            text-decoration: none;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        nav ul li a:hover {
+            background: #f0f0f0;
+            color: #1f2a74;
+            transform: translateX(5px);
+        }
+
+        .endpoint {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .method {
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .method.post {
+            background: #0b3b2d;
+            color: white;
+        }
+
+        .method.get {
+            background: #002b5c;
+            color: white;
+        }
+
+        .method.put {
+            background: #7a3e00;
+            color: white;
+        }
+
+        .method.delete {
+            background: #5b0f0f;
+            color: white;
+        }
+
+        .path {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .description {
+            color: #666;
+            margin: 15px 0;
+            line-height: 1.8;
+        }
+
+        .section-title {
+            color: #1f2a74;
+            font-size: 1.1em;
+            margin: 20px 0 10px;
+            font-weight: 600;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 5px;
+        }
+
+        .request-body,
+        .response-body {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #1f2a74;
+        }
+
+        .code {
+            font-family: 'Courier New', monospace;
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+
+        .params-table code {
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+            color: #1f2a74;
+        }
+
+        .code pre {
+            margin: 0;
+        }
+
+        .param {
+            background: #f0f0f0;
+            padding: 10px 15px;
+            margin: 8px 0;
+            border-radius: 4px;
+            border-left: 3px solid #1f2a74;
+        }
+
+        .param-name {
+            font-weight: bold;
+            color: #1f2a74;
+            font-family: 'Courier New', monospace;
+        }
+
+        .param-type {
+            color: #999;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+
+        .param-required {
+            color: #f93e3e;
+            font-size: 0.85em;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+
+        .param-desc {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .response-codes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .response-code {
+            padding: 12px 15px;
+            border-radius: 6px;
+            border-left: 4px solid #ccc;
+        }
+
+        .response-code.success {
+            border-left-color: #49cc90;
+            background: #f0fdf4;
+        }
+
+        .response-code.error {
+            border-left-color: #f93e3e;
+            background: #fef2f2;
+        }
+
+        .response-code strong {
+            display: block;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .auth-badge {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>📦 Product Service API</h1>
+            <p>Product Catalog, Categories & Inventory Management</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="meta">
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <strong>Base URL</strong>
+                    http://localhost:8083/api/v1
+                </div>
+                <div class="meta-item">
+                    <strong>Version</strong>
+                    1.0.0
+                </div>
+                <div class="meta-item">
+                    <strong>Author</strong>
+                    rjnat
+                </div>
+                <div class="meta-item">
+                    <strong>Last Updated</strong>
+                    November 18, 2025
+                </div>
+            </div>
+        </div>
+
+        <nav>
+            <h2>📑 Table of Contents</h2>
+            <ul>
+                <li><a href="#health">Health Check</a></li>
+                <li><a href="#products">Product Endpoints</a></li>
+                <li><a href="#categories">Category Endpoints</a></li>
+                <li><a href="#inventory">Inventory Endpoints</a></li>
+                <li><a href="#price-history">Price History Endpoints</a></li>
+            </ul>
+        </nav>
+
+        <!-- Health Check -->
+        <h2 id="health" class="section-title" style="font-size: 1.8em; margin-top: 30px;">Health Check</h2>
+        <p class="description">Service health monitoring endpoint (no authentication required).</p>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/health</span>
+            </div>
+            <div class="description">Returns the health status of the Product Service.</div>
+            <h3 class="section-title">Example Response</h3>
+            <div class="code">
+                <pre>{
+  "status": "UP",
+  "service": "product-service",
+  "timestamp": "2025-11-20T10:30:00Z"
+}</pre>
+            </div>
+            <div class="response-codes">
+                <div class="response-code success">
+                    <strong>200 OK</strong>
+                    Service is healthy and operational
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Endpoints -->
+        <h2 id="products" class="section-title" style="font-size: 1.8em; margin-top: 30px;">Product Endpoints</h2>
+        <p class="description">All product endpoints require Bearer authentication.</p>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method post">POST</span>
+                <span class="path">/products</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Creates a new product in the catalog. The SKU and barcode must be unique per
+                tenant.</div>
+            <h3 class="section-title">Request Body</h3>
+            <div class="code">
+                <pre>{
+  "code": "ESPRESSO",
+  "name": "Espresso",
+  "description": "Double shot espresso",
+  "sku": "ESP-001",
+  "barcode": "1234567890123",
+  "categoryId": "uuid-of-category",
+  "price": 25000.00,
+  "cost": 15000.00,
+  "taxRate": 10.0,
+  "unit": "CUP",
+  "isActive": true
+}</pre>
+            </div>
+            <h3 class="section-title">Response Codes</h3>
+            <div class="response-codes">
+                <div class="response-code success"><strong>201 Created</strong>
+                    <p>Product created successfully</p>
+                </div>
+                <div class="response-code error"><strong>400 Bad Request</strong>
+                    <p>Invalid input data</p>
+                </div>
+                <div class="response-code error"><strong>409 Conflict</strong>
+                    <p>Duplicate SKU or code</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/products/{id}</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Retrieves a product by its unique identifier (UUID).</div>
+            <h3 class="section-title">Path Parameters</h3>
+            <div class="request-body">
+                <div class="param">
+                    <span class="param-name">id</span>
+                    <span class="param-type">UUID</span>
+                    <span class="param-required">required</span>
+                    <div class="param-desc">Product unique identifier</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/products/code/{code}</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Retrieves a product by its product code (e.g., "ESPRESSO").</div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/products/sku/{sku}</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Retrieves a product by its SKU (e.g., "ESP-001").</div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/products/barcode/{barcode}</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Retrieves a product by its barcode. Useful for barcode scanner integration.</div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/products</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Retrieves all products with pagination support.</div>
+            <h3 class="section-title">Query Parameters</h3>
+            <div class="request-body">
+                <div class="param">
+                    <span class="param-name">page</span>
+                    <span class="param-type">integer</span>
+                    <div class="param-desc">Page number (0-indexed, default: 0)</div>
+                </div>
+                <div class="param">
+                    <span class="param-name">size</span>
+                    <span class="param-type">integer</span>
+                    <div class="param-desc">Page size (default: 20)</div>
+                </div>
+                <div class="param">
+                    <span class="param-name">sort</span>
+                    <span class="param-type">string</span>
+                    <div class="param-desc">Sort criteria (e.g., "name,asc" or "price,desc")</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/products/category/{categoryId}</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Retrieves all products in a specific category with pagination.</div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/products/active</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Retrieves all active products (isActive = true).</div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/products/search</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Searches products by name, SKU, or barcode.</div>
+            <h3 class="section-title">Query Parameters</h3>
+            <div class="request-body">
+                <div class="param">
+                    <span class="param-name">q</span>
+                    <span class="param-type">string</span>
+                    <span class="param-required">required</span>
+                    <div class="param-desc">Search query (searches in name, SKU, barcode)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method put">PUT</span>
+                <span class="path">/products/{id}</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Updates an existing product. Price changes are tracked in price history.</div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method delete">DELETE</span>
+                <span class="path">/products/{id}</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Soft deletes a product (sets deletedAt timestamp). The product remains in the
+                database but is excluded from queries.</div>
+        </div>
+
+        <!-- Category Endpoints -->
+        <h2 id="categories" class="section-title" style="font-size: 1.8em; margin-top: 40px;">Category Endpoints</h2>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method post">POST</span>
+                <span class="path">/categories</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Creates a new product category.</div>
+            <h3 class="section-title">Request Body</h3>
+            <div class="code">
+                <pre>{
+  "code": "HOT-DRINKS",
+  "name": "Hot Drinks",
+  "description": "All hot beverages",
+  "parentCategoryId": null,
+  "isActive": true,
+  "displayOrder": 1
+}</pre>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/categories/{id}</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Retrieves a category by its ID.</div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/categories/code/{code}</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Retrieves a category by its code.</div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/categories</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Retrieves all categories with pagination.</div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/categories/{parentId}/subcategories</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Retrieves all subcategories of a parent category.</div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/categories/active</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Retrieves all active categories.</div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method put">PUT</span>
+                <span class="path">/categories/{id}</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Updates an existing category.</div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method delete">DELETE</span>
+                <span class="path">/categories/{id}</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Soft deletes a category.</div>
+        </div>
+
+        <!-- Inventory Endpoints -->
+        <h2 id="inventory" class="section-title" style="font-size: 1.8em; margin-top: 40px;">Inventory Endpoints</h2>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method post">POST</span>
+                <span class="path">/inventory</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Creates or updates inventory for a product at a store.</div>
+            <h3 class="section-title">Request Body</h3>
+            <div class="code">
+                <pre>{
+  "productId": "uuid-of-product",
+  "storeId": "uuid-of-store",
+  "quantity": 100,
+  "minStockLevel": 10,
+  "maxStockLevel": 500
+}</pre>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/inventory/{productId}</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Retrieves inventory for a specific product across all stores or filtered by store.
+            </div>
+            <h3 class="section-title">Query Parameters</h3>
+            <div class="request-body">
+                <div class="param">
+                    <span class="param-name">storeId</span>
+                    <span class="param-type">UUID</span>
+                    <div class="param-desc">Optional: Filter by specific store</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method post">POST</span>
+                <span class="path">/inventory/adjust</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Adjusts inventory quantity (increase or decrease) with tracking.</div>
+            <h3 class="section-title">Request Body</h3>
+            <div class="code">
+                <pre>{
+  "productId": "uuid-of-product",
+  "storeId": "uuid-of-store",
+  "quantity": -5,
+  "type": "SALE",
+  "notes": "Sold 5 units"
+}</pre>
+            </div>
+            <div class="description">
+                <strong>Adjustment Types:</strong> SALE, RESTOCK, ADJUSTMENT, TRANSFER, RESERVE, RELEASE, DAMAGE, THEFT,
+                RETURN
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method post">POST</span>
+                <span class="path">/inventory/reserve</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Reserves inventory for an order (marks quantity as reserved).</div>
+            <h3 class="section-title">Request Body</h3>
+            <div class="code">
+                <pre>{
+  "productId": "uuid-of-product",
+  "storeId": "uuid-of-store",
+  "quantity": 5,
+  "orderId": "uuid-of-order",
+  "notes": "Reserved for order #12345"
+}</pre>
+            </div>
+            <div class="response-codes">
+                <div class="response-code success">
+                    <strong>200 OK</strong>
+                    Inventory reserved successfully
+                </div>
+                <div class="response-code error">
+                    <strong>400 Bad Request</strong>
+                    Insufficient inventory available
+                </div>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method post">POST</span>
+                <span class="path">/inventory/release</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Releases reserved inventory (e.g., when order is cancelled).</div>
+            <h3 class="section-title">Request Body</h3>
+            <div class="code">
+                <pre>{
+  "productId": "uuid-of-product",
+  "storeId": "uuid-of-store",
+  "quantity": 5,
+  "orderId": "uuid-of-order",
+  "notes": "Order cancelled, releasing inventory"
+}</pre>
+            </div>
+            <div class="response-codes">
+                <div class="response-code success">
+                    <strong>200 OK</strong>
+                    Reserved inventory released successfully
+                </div>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/inventory/{id}</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Retrieves inventory record by ID.</div>
+            <h3 class="section-title">Example Response</h3>
+            <div class="code">
+                <pre>{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "productId": "uuid-of-product",
+    "storeId": "uuid-of-store",
+    "quantityOnHand": 95,
+    "reservedQuantity": 5,
+    "availableQuantity": 90,
+    "reorderPoint": 10,
+    "reorderQuantity": 50
+  }
+}</pre>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/inventory/product/{productId}/branch/{branchId}</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Retrieves inventory for a specific product across all stores in a branch.</div>
+            <h3 class="section-title">Example Response</h3>
+            <div class="code">
+                <pre>{
+  "success": true,
+  "data": [
+    {
+      "storeId": "uuid-store-1",
+      "storeName": "Downtown Store",
+      "quantityOnHand": 50,
+      "availableQuantity": 45
+    },
+    {
+      "storeId": "uuid-store-2",
+      "storeName": "Airport Store",
+      "quantityOnHand": 30,
+      "availableQuantity": 28
+    }
+  ]
+}</pre>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/inventory</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Lists all inventory records with pagination.</div>
+            <h3 class="section-title">Query Parameters</h3>
+            <div class="request-body">
+                <div class="param">
+                    <span class="param-name">page</span>
+                    <span class="param-type">integer</span>
+                    <div class="param-desc">Page number (default: 0)</div>
+                </div>
+                <div class="param">
+                    <span class="param-name">size</span>
+                    <span class="param-type">integer</span>
+                    <div class="param-desc">Page size (default: 20)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/inventory/branch/{branchId}</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Lists all inventory for a specific branch with pagination.</div>
+            <h3 class="section-title">Query Parameters</h3>
+            <div class="request-body">
+                <div class="param">
+                    <span class="param-name">page</span>
+                    <span class="param-type">integer</span>
+                    <div class="param-desc">Page number (default: 0)</div>
+                </div>
+                <div class="param">
+                    <span class="param-name">size</span>
+                    <span class="param-type">integer</span>
+                    <div class="param-desc">Page size (default: 20)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/inventory/product/{productId}</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Lists inventory for a specific product across all stores.</div>
+            <h3 class="section-title">Example Response</h3>
+            <div class="code">
+                <pre>{
+  "success": true,
+  "data": [
+    {
+      "storeId": "uuid-store-1",
+      "storeName": "Main Branch",
+      "quantityOnHand": 100,
+      "availableQuantity": 95
+    },
+    {
+      "storeId": "uuid-store-2",
+      "storeName": "West Branch",
+      "quantityOnHand": 75,
+      "availableQuantity": 70
+    }
+  ]
+}</pre>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/inventory/low-stock</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Lists all products with low stock levels (below reorder point) across all stores.
+            </div>
+            <h3 class="section-title">Example Response</h3>
+            <div class="code">
+                <pre>{
+  "success": true,
+  "data": [
+    {
+      "productId": "uuid",
+      "productName": "Espresso Beans",
+      "storeId": "uuid-store",
+      "storeName": "Downtown Store",
+      "quantityOnHand": 5,
+      "reorderPoint": 10,
+      "reorderQuantity": 50,
+      "status": "LOW_STOCK"
+    }
+  ]
+}</pre>
+            </div>
+            <div class="response-codes">
+                <div class="response-code success">
+                    <strong>200 OK</strong>
+                    Returns list of low stock items (may be empty)
+                </div>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/inventory/low-stock/branch/{branchId}</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Lists products with low stock levels for a specific branch.</div>
+            <h3 class="section-title">Example Response</h3>
+            <div class="code">
+                <pre>{
+  "success": true,
+  "data": [
+    {
+      "productId": "uuid",
+      "productName": "Coffee Beans - Dark Roast",
+      "storeId": "uuid-store",
+      "storeName": "Main Store",
+      "quantityOnHand": 8,
+      "reorderPoint": 15,
+      "reorderQuantity": 100
+    }
+  ]
+}</pre>
+            </div>
+        </div>
+
+        <!-- Price History Endpoints -->
+        <h2 id="price-history" class="section-title" style="font-size: 1.8em; margin-top: 40px;">Price History Endpoints
+        </h2>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/price-history/product/{productId}</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Retrieves price change history for a product with pagination.</div>
+            <h3 class="section-title">Query Parameters</h3>
+            <div class="request-body">
+                <div class="param">
+                    <span class="param-name">page</span>
+                    <span class="param-type">integer</span>
+                    <div class="param-desc">Page number (default: 0)</div>
+                </div>
+                <div class="param">
+                    <span class="param-name">size</span>
+                    <span class="param-type">integer</span>
+                    <div class="param-desc">Page size (default: 20)</div>
+                </div>
+            </div>
+            <h3 class="section-title">Example Response</h3>
+            <div class="code">
+                <pre>{
+  "success": true,
+  "data": {
+    "content": [
+      {
+        "id": "uuid",
+        "productId": "uuid-of-product",
+        "oldPrice": 20000.00,
+        "newPrice": 25000.00,
+        "effectiveFrom": "2025-11-18T10:00:00Z",
+        "changedBy": "admin@coffee.test",
+        "reason": "Price adjustment"
+      }
+    ],
+    "page": 0,
+    "size": 20,
+    "totalElements": 1,
+    "totalPages": 1
+  }
+}</pre>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/price-history/product/{productId}/effective</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">Retrieves the effective price for a product at a specific date/time.</div>
+            <h3 class="section-title">Query Parameters</h3>
+            <div class="request-body">
+                <div class="param">
+                    <span class="param-name">date</span>
+                    <span class="param-type">string (ISO 8601)</span>
+                    <span class="param-required">required</span>
+                    <div class="param-desc">Date to check effective price (e.g., 2025-11-20T10:30:00Z)</div>
+                </div>
+            </div>
+            <h3 class="section-title">Example Response</h3>
+            <div class="code">
+                <pre>{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "productId": "uuid-of-product",
+    "oldPrice": 20000.00,
+    "newPrice": 25000.00,
+    "effectiveFrom": "2025-11-18T10:00:00Z",
+    "changedBy": "admin@coffee.test",
+    "reason": "Seasonal price adjustment"
+  }
+}</pre>
+            </div>
+            <div class="response-codes">
+                <div class="response-code success">
+                    <strong>200 OK</strong>
+                    Returns the price effective at the specified date
+                </div>
+                <div class="response-code error">
+                    <strong>404 Not Found</strong>
+                    No price history found for the given date
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 CursorPOS Product Service | Generated: November 20, 2025</p>
+    </footer>
+</body>
+
+</html>

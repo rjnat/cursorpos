@@ -2,10 +2,9 @@ spring:
   application:
     name: product-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/cursorpos_product
-    username: postgres
-    # Use environment variable to avoid storing credentials in source
-    password: ${DB_PASSWORD:change_me}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:cursorpos}
+    username: ${DB_USER:posuser}
+    password: ${DB_PASSWORD:pos_db_password_2025}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -19,13 +18,16 @@ spring:
     enabled: true
     baseline-on-migrate: true
     locations: classpath:db/migration
+    table: flyway_schema_history_product
   kafka:
+    enabled: false
     bootstrap-servers: localhost:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     consumer:
       group-id: product-service
+      auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
@@ -44,11 +46,14 @@ management:
       show-details: always
 
 logging:
+  file:
+    path: ./logs
+    name: ./logs/product-service.log
   level:
     com.cursorpos: DEBUG
     org.springframework.web: INFO
     org.hibernate.SQL: DEBUG
 
 jwt:
-  secret: your-secret-key-change-this-in-production
+  secret: ${JWT_SECRET:your-secret-key-here-should-be-at-least-256-bits-long-for-hs256-algorithm}
   expiration: 86400000

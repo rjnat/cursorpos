@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -22,19 +21,19 @@ public class HealthController {
 
     @GetMapping("/health")
     public ResponseEntity<Map<String, Object>> health() {
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", "UP");
-        response.put("service", "API Gateway");
-        response.put("timestamp", Instant.now().toString());
+        Map<String, Object> response = Map.of(
+                "status", "UP",
+                "service", "API Gateway",
+                "timestamp", Instant.now().toString());
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/info")
     public ResponseEntity<Map<String, Object>> info() {
-        Map<String, Object> response = new HashMap<>();
-        response.put("service", "CursorPOS API Gateway");
-        response.put("version", "1.0.0");
-        response.put("description", "API Gateway for CursorPOS microservices");
+        Map<String, Object> response = Map.of(
+                "service", "CursorPOS API Gateway",
+                "version", "1.0.0",
+                "description", "API Gateway for CursorPOS microservices");
         return ResponseEntity.ok(response);
     }
 }

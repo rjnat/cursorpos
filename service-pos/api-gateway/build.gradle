@@ -3,7 +3,13 @@ plugins {
 }
 
 dependencies {
-    implementation project(':shared-lib')
+    implementation(project(':shared-lib')) {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-data-jpa'
+        exclude group: 'org.springframework.kafka', module: 'spring-kafka'
+        exclude group: 'org.flywaydb'
+        exclude group: 'org.postgresql'
+    }
     
     // Spring Cloud Gateway
     implementation 'org.springframework.cloud:spring-cloud-starter-gateway:4.1.0'
@@ -22,6 +28,9 @@ dependencies {
     
     // Micrometer for metrics
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    
+    // Test dependencies
+    testImplementation 'io.projectreactor:reactor-test'
 }
 
 // Gateway doesn't need a separate JAR

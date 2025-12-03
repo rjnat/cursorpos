@@ -196,7 +196,6 @@ public class ProductService {
         log.info("Product soft-deleted successfully with ID: {}", id);
     }
 
-    @SuppressWarnings("null")
     private void recordPriceChange(Product product, BigDecimal oldPrice, BigDecimal newPrice, String reason,
             String changedBy) {
         PriceHistory priceHistory = PriceHistory.builder()
@@ -209,6 +208,8 @@ public class ProductService {
                 .reason(reason)
                 .build();
 
-        priceHistoryRepository.save(priceHistory);
+        @SuppressWarnings("null")
+        PriceHistory savedHistory = priceHistoryRepository.save(priceHistory);
+        log.debug("Saved price history: {}", savedHistory.getId());
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -58,11 +57,11 @@ public class FallbackController {
      * Builds a standardized fallback response.
      */
     private ResponseEntity<Map<String, Object>> buildFallbackResponse(String serviceName, String message) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", false);
-        response.put("message", message);
-        response.put("errorCode", "SERVICE_UNAVAILABLE");
-        response.put("service", serviceName);
+        Map<String, Object> response = Map.of(
+                "success", false,
+                "message", message,
+                "errorCode", "SERVICE_UNAVAILABLE",
+                "service", serviceName);
 
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
     }

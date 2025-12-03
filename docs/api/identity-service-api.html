@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identity Service API Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1f2a74 0%, #4b2366 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .meta {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .meta-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .meta-item strong {
+            display: block;
+            color: #1f2a74;
+            margin-bottom: 5px;
+        }
+
+        nav {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        nav h2 {
+            color: #1f2a74;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav ul li {
+            margin: 8px 0;
+        }
+
+        nav ul li a {
+            color: #555;
+            text-decoration: none;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        nav ul li a:hover {
+            background: #f0f0f0;
+            color: #1f2a74;
+            transform: translateX(5px);
+        }
+
+        .endpoint {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .method {
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .method.post {
+            background: #0b3b2d;
+            color: white;
+        }
+
+        .method.get {
+            background: #002b5c;
+            color: white;
+        }
+
+        .method.put {
+            background: #7a3e00;
+            color: white;
+        }
+
+        .method.delete {
+            background: #5b0f0f;
+            color: white;
+        }
+
+        .path {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .description {
+            color: #666;
+            margin: 15px 0;
+            line-height: 1.8;
+        }
+
+        .section-title {
+            color: #1f2a74;
+            font-size: 1.1em;
+            margin: 20px 0 10px;
+            font-weight: 600;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 5px;
+        }
+
+        .request-body,
+        .response-body {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #1f2a74;
+        }
+
+        .code {
+            font-family: 'Courier New', monospace;
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+
+        .code pre {
+            margin: 0;
+        }
+
+        .param {
+            background: #f0f0f0;
+            padding: 10px 15px;
+            margin: 8px 0;
+            border-radius: 4px;
+            border-left: 3px solid #1f2a74;
+        }
+
+        .param-name {
+            font-weight: bold;
+            color: #1f2a74;
+            font-family: 'Courier New', monospace;
+        }
+
+        .param-type {
+            color: #999;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+
+        .param-required {
+            color: #f93e3e;
+            font-size: 0.85em;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+
+        .param-desc {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .response-codes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .response-code {
+            padding: 12px 15px;
+            border-radius: 6px;
+            border-left: 4px solid #ccc;
+        }
+
+        .response-code.success {
+            border-left-color: #49cc90;
+            background: #f0fdf4;
+        }
+
+        .response-code.error {
+            border-left-color: #f93e3e;
+            background: #fef2f2;
+        }
+
+        .response-code strong {
+            display: block;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .auth-badge {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>🔐 Identity Service API</h1>
+            <p>Authentication and User Management</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="meta">
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <strong>Base URL</strong>
+                    http://localhost:8081/api/v1
+                </div>
+                <div class="meta-item">
+                    <strong>Version</strong>
+                    1.0.0
+                </div>
+                <div class="meta-item">
+                    <strong>Author</strong>
+                    rjnat
+                </div>
+                <div class="meta-item">
+                    <strong>Last Updated</strong>
+                    November 18, 2025
+                </div>
+            </div>
+        </div>
+
+        <nav>
+            <h2>📑 Table of Contents</h2>
+            <ul>
+                <li><a href="#auth">Authentication Endpoints</a></li>
+                <li><a href="#auth-login">POST /auth/login</a></li>
+                <li><a href="#auth-refresh">POST /auth/refresh</a></li>
+                <li><a href="#auth-validate">GET /auth/validate</a></li>
+                <li><a href="#auth-logout">POST /auth/logout</a></li>
+                <li><a href="#users">User Endpoints</a></li>
+                <li><a href="#users-me">GET /users/me</a></li>
+            </ul>
+        </nav>
+
+        <!-- Authentication Endpoints -->
+        <h2 id="auth" class="section-title" style="font-size: 1.8em; margin-top: 30px;">Authentication Endpoints</h2>
+        <p class="description">Endpoints for user authentication, token management, and session control.</p>
+
+        <!-- Login -->
+        <div class="endpoint" id="auth-login">
+            <div class="endpoint-header">
+                <span class="method post">POST</span>
+                <span class="path">/auth/login</span>
+            </div>
+            <div class="description">
+                Authenticates a user with email and password, returns access and refresh JWT tokens. The access token
+                should be used for subsequent API calls in the Authorization header.
+            </div>
+
+            <h3 class="section-title">Request Body</h3>
+            <div class="request-body">
+                <div class="param">
+                    <span class="param-name">email</span>
+                    <span class="param-type">string</span>
+                    <span class="param-required">required</span>
+                    <div class="param-desc">User's email address</div>
+                </div>
+                <div class="param">
+                    <span class="param-name">password</span>
+                    <span class="param-type">string</span>
+                    <span class="param-required">required</span>
+                    <div class="param-desc">User's password</div>
+                </div>
+                <div class="param">
+                    <span class="param-name">tenantId</span>
+                    <span class="param-type">string</span>
+                    <span class="param-required">required</span>
+                    <div class="param-desc">Tenant identifier for multi-tenant isolation</div>
+                </div>
+            </div>
+
+            <h3 class="section-title">Example Request</h3>
+            <div class="code">
+                <pre>{
+  "email": "cashier1@coffee.test",
+  "password": "Test@123456",
+  "tenantId": "tenant-coffee-001"
+}</pre>
+            </div>
+
+            <h3 class="section-title">Response Codes</h3>
+            <div class="response-codes">
+                <div class="response-code success">
+                    <strong>200 OK</strong>
+                    <p>Login successful, returns access and refresh tokens</p>
+                </div>
+                <div class="response-code error">
+                    <strong>401 Unauthorized</strong>
+                    <p>Invalid credentials (wrong email or password)</p>
+                </div>
+                <div class="response-code error">
+                    <strong>423 Locked</strong>
+                    <p>Account locked due to multiple failed login attempts</p>
+                </div>
+            </div>
+
+            <h3 class="section-title">Example Response (200 OK)</h3>
+            <div class="code">
+                <pre>{
+  "success": true,
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiJ9...",
+    "refreshToken": "eyJhbGciOiJIUzI1NiJ9...",
+    "tokenType": "Bearer",
+    "expiresIn": 86400,
+    "user": {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "tenantId": "tenant-coffee-001",
+      "email": "cashier1@coffee.test",
+      "firstName": "John",
+      "lastName": "Doe",
+      "phone": "+1234567890",
+      "isActive": true,
+      "emailVerified": true,
+      "roles": ["CASHIER"],
+      "permissions": ["products:read", "transactions:create"]
+    }
+  },
+  "message": "Login successful"
+}</pre>
+            </div>
+        </div>
+
+        <!-- Refresh Token -->
+        <div class="endpoint" id="auth-refresh">
+            <div class="endpoint-header">
+                <span class="method post">POST</span>
+                <span class="path">/auth/refresh</span>
+            </div>
+            <div class="description">
+                Generates a new access token using a valid refresh token. Use this endpoint when the access token
+                expires to obtain a new one without requiring the user to log in again.
+            </div>
+
+            <h3 class="section-title">Request Body</h3>
+            <div class="request-body">
+                <div class="param">
+                    <span class="param-name">refreshToken</span>
+                    <span class="param-type">string</span>
+                    <span class="param-required">required</span>
+                    <div class="param-desc">The refresh token obtained from login</div>
+                </div>
+            </div>
+
+            <h3 class="section-title">Example Request</h3>
+            <div class="code">
+                <pre>{
+  "refreshToken": "eyJhbGciOiJIUzI1NiJ9..."
+}</pre>
+            </div>
+
+            <h3 class="section-title">Response Codes</h3>
+            <div class="response-codes">
+                <div class="response-code success">
+                    <strong>200 OK</strong>
+                    <p>Token refreshed successfully, returns new tokens</p>
+                </div>
+                <div class="response-code error">
+                    <strong>401 Unauthorized</strong>
+                    <p>Invalid or expired refresh token</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Validate Token -->
+        <div class="endpoint" id="auth-validate">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/auth/validate</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">
+                Validates a JWT token and returns user information if the token is valid. This endpoint can be used by
+                frontend applications to verify authentication state and retrieve current user details.
+            </div>
+
+            <h3 class="section-title">Headers</h3>
+            <div class="request-body">
+                <div class="param">
+                    <span class="param-name">Authorization</span>
+                    <span class="param-type">string</span>
+                    <span class="param-required">required</span>
+                    <div class="param-desc">Bearer token: <code>Bearer eyJhbGciOiJIUzI1NiJ9...</code></div>
+                </div>
+            </div>
+
+            <h3 class="section-title">Response Codes</h3>
+            <div class="response-codes">
+                <div class="response-code success">
+                    <strong>200 OK</strong>
+                    <p>Token is valid, returns user information</p>
+                </div>
+                <div class="response-code error">
+                    <strong>401 Unauthorized</strong>
+                    <p>Invalid or expired token</p>
+                </div>
+                <div class="response-code error">
+                    <strong>400 Bad Request</strong>
+                    <p>Authorization header is missing</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logout -->
+        <div class="endpoint" id="auth-logout">
+            <div class="endpoint-header">
+                <span class="method post">POST</span>
+                <span class="path">/auth/logout</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">
+                Logs out a user by invalidating the JWT token. After logout, the token can no longer be used for
+                authentication. The frontend should remove the token from storage.
+            </div>
+
+            <h3 class="section-title">Headers</h3>
+            <div class="request-body">
+                <div class="param">
+                    <span class="param-name">Authorization</span>
+                    <span class="param-type">string</span>
+                    <span class="param-required">required</span>
+                    <div class="param-desc">Bearer token</div>
+                </div>
+            </div>
+
+            <h3 class="section-title">Response Codes</h3>
+            <div class="response-codes">
+                <div class="response-code success">
+                    <strong>200 OK</strong>
+                    <p>Logout successful</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Endpoints -->
+        <h2 id="users" class="section-title" style="font-size: 1.8em; margin-top: 40px;">User Endpoints</h2>
+        <p class="description">Endpoints for user profile and account management.</p>
+
+        <!-- Get Current User -->
+        <div class="endpoint" id="users-me">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/users/me</span>
+                <span class="auth-badge">🔒 Requires Authentication</span>
+            </div>
+            <div class="description">
+                Retrieves the currently authenticated user's profile information including roles, permissions, and
+                account details.
+            </div>
+
+            <h3 class="section-title">Headers</h3>
+            <div class="request-body">
+                <div class="param">
+                    <span class="param-name">Authorization</span>
+                    <span class="param-type">string</span>
+                    <span class="param-required">required</span>
+                    <div class="param-desc">Bearer token</div>
+                </div>
+            </div>
+
+            <h3 class="section-title">Response Codes</h3>
+            <div class="response-codes">
+                <div class="response-code success">
+                    <strong>200 OK</strong>
+                    <p>Returns user profile information</p>
+                </div>
+                <div class="response-code error">
+                    <strong>401 Unauthorized</strong>
+                    <p>Invalid or missing token</p>
+                </div>
+                <div class="response-code error">
+                    <strong>404 Not Found</strong>
+                    <p>User not found</p>
+                </div>
+            </div>
+
+            <h3 class="section-title">Example Response (200 OK)</h3>
+            <div class="code">
+                <pre>{
+  "success": true,
+  "data": {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "tenantId": "tenant-coffee-001",
+    "email": "cashier1@coffee.test",
+    "firstName": "John",
+    "lastName": "Doe",
+    "phone": "+1234567890",
+    "isActive": true,
+    "emailVerified": true,
+    "lastLoginAt": "2025-11-18T10:30:00Z",
+    "roles": ["CASHIER"],
+    "permissions": ["products:read", "transactions:create"],
+    "createdAt": "2025-11-01T08:00:00Z",
+    "updatedAt": "2025-11-18T10:30:00Z"
+  }
+}</pre>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 CursorPOS Identity Service | Generated: November 18, 2025</p>
+    </footer>
+</body>
+
+</html>

@@ -3,6 +3,7 @@ package com.cursorpos.identity.repository;
 import com.cursorpos.identity.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -37,5 +38,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
      * Counts active users for a tenant.
      */
     @Query("SELECT COUNT(u) FROM User u WHERE u.tenantId = :tenantId AND u.isActive = true AND u.deletedAt IS NULL")
-    long countActiveUsersByTenantId(String tenantId);
+    long countActiveUsersByTenantId(@Param("tenantId") String tenantId);
 }

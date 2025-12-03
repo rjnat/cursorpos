@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: identity-service-test
+  
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/cursorpos
+    username: posuser
+    password: pos_db_password_2025
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        default_schema: public
+  
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    schemas: public
+    clean-disabled: false
+  
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: redis_dev_password_2025
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:test-secret-key-for-jwt-token-signing-minimum-256-bits-required-for-hs256-algorithm}
+  expiration: 86400
+  refresh-expiration: 604800
+
+# Logging
+logging:
+  level:
+    root: INFO
+    com.cursorpos: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.springframework.test: DEBUG

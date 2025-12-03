@@ -27,12 +27,13 @@ public interface TransactionMapper {
     @Mapping(target = "totalAmount", ignore = true)
     @Mapping(target = "paidAmount", ignore = true)
     @Mapping(target = "changeAmount", ignore = true)
+    @Mapping(target = "items", ignore = true)
+    @Mapping(target = "payments", ignore = true)
     Transaction toTransaction(TransactionRequest request);
 
     TransactionResponse toTransactionResponse(Transaction transaction);
 
     // TransactionItem mappings
-    @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "transaction", ignore = true)
     @Mapping(target = "taxAmount", ignore = true)
     @Mapping(target = "subtotal", ignore = true)

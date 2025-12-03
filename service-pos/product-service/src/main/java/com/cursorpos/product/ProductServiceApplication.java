@@ -2,7 +2,6 @@ package com.cursorpos.product;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 /**
  * Product Service Application.
@@ -13,7 +12,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
  * @since 2025-11-13
  */
 @SpringBootApplication(scanBasePackages = { "com.cursorpos.product", "com.cursorpos.shared" })
-@EnableJpaAuditing
 public class ProductServiceApplication {
 
     public static void main(String[] args) {

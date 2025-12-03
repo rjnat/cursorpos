@@ -7,6 +7,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.Objects;
 
 /**
  * Provides current auditor (user) for JPA auditing.
@@ -26,18 +27,17 @@ public class AuditorAwareImpl implements AuditorAware<String> {
 
     @Override
     @NonNull
-    @SuppressWarnings("null")
     public Optional<String> getCurrentAuditor() {
         try {
             String userId = TenantContext.getUserId();
             if (userId != null && !userId.isBlank()) {
-                return Optional.of(userId);
+                return Objects.requireNonNull(Optional.of(userId));
             }
             log.debug("No user context available for auditing");
-            return Optional.of("SYSTEM");
+            return Objects.requireNonNull(Optional.of("SYSTEM"));
         } catch (Exception e) {
             log.warn("Error getting current auditor: {}", e.getMessage());
-            return Optional.of("SYSTEM");
+            return Objects.requireNonNull(Optional.of("SYSTEM"));
         }
     }
 }

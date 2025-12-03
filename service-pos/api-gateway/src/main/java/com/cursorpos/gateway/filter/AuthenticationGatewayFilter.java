@@ -8,7 +8,6 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -23,12 +22,18 @@ import java.util.function.Predicate;
  * Extracts tenant context and adds headers for downstream services.
  * </p>
  * 
+ * <p>
+ * NOTE: Currently disabled. Component annotation removed to prevent bean
+ * creation
+ * since JwtUtil is excluded from API Gateway dependencies.
+ * </p>
+ * 
  * @author rjnat
  * @version 1.0.0
  * @since 2025-11-13
  */
 @Slf4j
-@Component
+// @Component - Disabled: JwtUtil not available in reactive gateway
 @RequiredArgsConstructor
 public class AuthenticationGatewayFilter implements GatewayFilter {
 
@@ -64,12 +69,6 @@ public class AuthenticationGatewayFilter implements GatewayFilter {
         }
 
         String token = authHeader.substring(7);
-
-        // Validate JWT token
-        if (Boolean.FALSE.equals(jwtUtil.validateToken(token))) {
-            log.warn("Invalid or expired JWT token for path: {}", path);
-            return onError(exchange, "Invalid or expired token", HttpStatus.UNAUTHORIZED);
-        }
 
         // Validate JWT token
         if (Boolean.FALSE.equals(jwtUtil.validateToken(token))) {
@@ -131,7 +130,7 @@ public class AuthenticationGatewayFilter implements GatewayFilter {
     }
 
     /**
-     * Returns an error response.
+     * Return error response.
      */
     @SuppressWarnings("null")
     private Mono<Void> onError(ServerWebExchange exchange, String message, HttpStatus status) {
@@ -143,6 +142,7 @@ public class AuthenticationGatewayFilter implements GatewayFilter {
                 "{\"success\":false,\"message\":\"%s\",\"errorCode\":\"%s\"}",
                 message, status.name());
 
-        return response.writeWith(Mono.just(response.bufferFactory().wrap(errorBody.getBytes())));
+        byte[] bytes = errorBody.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        return response.writeWith(Mono.just(response.bufferFactory().wrap(bytes)));
     }
 }

@@ -4,8 +4,8 @@ spring:
   
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:cursorpos}
-    username: ${DB_USER:postgres}
-    password: ${DB_PASSWORD:postgres}
+    username: ${DB_USER:posuser}
+    password: ${DB_PASSWORD:bootpwd}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -27,6 +27,7 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
     schemas: public
+    table: flyway_schema_history_identity
   
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
@@ -40,14 +41,14 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:redis_secret}
+      password: ${REDIS_PASSWORD:redis_dev_password_2025}
 
 server:
   port: 8081
 
 # JWT Configuration
 jwt:
-  secret: ${JWT_SECRET:your-super-secret-jwt-key-change-this-in-production-minimum-256-bits}
+  secret: ${JWT_SECRET:your-secret-key-here-should-be-at-least-256-bits-long-for-hs256-algorithm}
   expiration: 86400
   refresh-expiration: 604800
 
@@ -70,12 +71,5 @@ management:
     health:
       show-details: always
 
-# Logging
-logging:
-  level:
-    root: INFO
-    com.cursorpos: DEBUG
-    org.hibernate.SQL: DEBUG
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+# Logging (configured in logback-spring.xml)
+# No need to set logging.file properties as logback-spring.xml handles file paths

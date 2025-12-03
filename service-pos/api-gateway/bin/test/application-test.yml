@@ -1,0 +1,79 @@
+spring:
+  application:
+    name: api-gateway-test
+  
+  cloud:
+    gateway:
+      # Global CORS configuration
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:5173"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+            maxAge: 3600
+      
+      # Route definitions
+      routes:
+        # Identity Service Routes
+        - id: identity-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/v1/auth/**, /api/v1/users/**, /api/v1/roles/**, /api/v1/permissions/**
+        
+        # Admin Service Routes
+        - id: admin-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/v1/tenants/**, /api/v1/customers/**, /api/v1/stores/**, /api/v1/branches/**, /api/v1/analytics/**, /api/v1/settings/**
+        
+        # Product Service Routes
+        - id: product-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/v1/products/**, /api/v1/categories/**, /api/v1/pricing/**, /api/v1/inventory/**, /api/v1/suppliers/**
+        
+        # Transaction Service Routes
+        - id: transaction-service
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/v1/transactions/**, /api/v1/sales/**, /api/v1/payments/**, /api/v1/receipts/**, /api/v1/discounts/**, /api/v1/loyalty/**
+
+  # Redis configuration (disabled for tests - use embedded or mock)
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
+
+# Server configuration
+server:
+  port: 0  # Random port for testing
+
+# JWT configuration
+jwt:
+  secret: test-secret-key-for-jwt-token-generation-minimum-256-bits-required-for-hs256-algorithm
+  expiration: 86400
+
+# Management endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+# Logging
+logging:
+  level:
+    root: INFO
+    com.cursorpos: DEBUG

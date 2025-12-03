@@ -4,6 +4,7 @@ import com.cursorpos.identity.entity.Permission;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,4 +27,9 @@ public interface PermissionRepository extends JpaRepository<Permission, UUID> {
      * Checks if permission code exists for a tenant.
      */
     boolean existsByCodeAndTenantId(String code, String tenantId);
+
+    /**
+     * Finds all permissions for a list of role IDs.
+     */
+    List<Permission> findByIdIn(List<UUID> permissionIds);
 }

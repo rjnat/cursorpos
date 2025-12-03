@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Service API Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1f2a74 0%, #4b2366 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .meta {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .meta-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .meta-item strong {
+            display: block;
+            color: #1f2a74;
+            margin-bottom: 5px;
+        }
+
+        nav {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        nav h2 {
+            color: #1f2a74;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav ul li {
+            margin: 8px 0;
+        }
+
+        nav ul li a {
+            color: #555;
+            text-decoration: none;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        nav ul li a:hover {
+            background: #f0f0f0;
+            color: #1f2a74;
+            padding-left: 20px;
+        }
+
+        .endpoint {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .method {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+        }
+
+        .method.post {
+            background: #0b3b2d;
+            color: white;
+        }
+
+        .method.get {
+            background: #002b5c;
+            color: white;
+        }
+
+        .method.put {
+            background: #7a3e00;
+            color: white;
+        }
+
+        .method.delete {
+            background: #5b0f0f;
+            color: white;
+        }
+
+        .path {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            color: #1f2a74;
+            font-weight: 500;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .badge.auth {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .section {
+            margin: 20px 0;
+        }
+
+        .section h3 {
+            color: #374151;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            border-left: 4px solid #1f2a74;
+            padding-left: 12px;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .code-block .key {
+            color: #7dd3fc;
+        }
+
+        .code-block .string {
+            color: #86efac;
+        }
+
+        .code-block .number {
+            color: #fbbf24;
+        }
+
+        .code-block .boolean {
+            color: #c084fc;
+        }
+
+        .params-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+
+        .params-table th,
+        .params-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .params-table th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .params-table code {
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+            color: #1f2a74;
+        }
+
+        .required {
+            color: #ef4444;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .response-codes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin: 10px 0;
+        }
+
+        .response-code {
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid;
+        }
+
+        .response-code.success {
+            background: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .response-code.error {
+            background: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        .response-code.client-error {
+            background: #fed7aa;
+            border-color: #f59e0b;
+        }
+
+        .response-code strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #6b7280;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .endpoint-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .params-table {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>🧾 Transaction Service API</h1>
+        <p>Point of Sale Transaction Management & Checkout Processing</p>
+    </header>
+
+    <div class="container">
+        <div class="meta">
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <strong>Base URL</strong>
+                    http://localhost:8084/api
+                </div>
+                <div class="meta-item">
+                    <strong>Version</strong>
+                    1.0.0
+                </div>
+                <div class="meta-item">
+                    <strong>Port</strong>
+                    8084
+                </div>
+                <div class="meta-item">
+                    <strong>Authentication</strong>
+                    JWT Bearer Token + X-Tenant-ID Header
+                </div>
+                <div class="meta-item">
+                    <strong>Last Updated</strong>
+                    November 20, 2025
+                </div>
+            </div>
+        </div>
+
+        <nav>
+            <h2>📑 Table of Contents</h2>
+            <ul>
+                <li><a href="#health">Health Check</a></li>
+                <li><a href="#create-transaction">Create Transaction (Checkout)</a></li>
+                <li><a href="#get-transaction-id">Get Transaction by ID</a></li>
+                <li><a href="#get-transaction-number">Get Transaction by Number</a></li>
+                <li><a href="#get-all-transactions">Get All Transactions (Paginated)</a></li>
+                <li><a href="#get-transactions-branch">Get Transactions by Branch</a></li>
+                <li><a href="#get-transactions-customer">Get Transactions by Customer</a></li>
+                <li><a href="#get-transactions-status">Get Transactions by Status</a></li>
+                <li><a href="#get-transactions-daterange">Get Transactions by Date Range</a></li>
+                <li><a href="#cancel-transaction">Cancel Transaction</a></li>
+            </ul>
+        </nav>
+
+        <!-- Health Check -->
+        <div class="endpoint" id="health">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/health</span>
+            </div>
+            <p>Check service health status.</p>
+
+            <div class="section">
+                <h3>Response (200 OK)</h3>
+                <div class="code-block">
+                    {
+                    <span class="key">"status"</span>: <span class="string">"UP"</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Transaction -->
+        <div class="endpoint" id="create-transaction">
+            <div class="endpoint-header">
+                <span class="method post">POST</span>
+                <span class="path">/transactions</span>
+                <span class="badge auth">🔒 Requires Auth</span>
+            </div>
+            <p>Create a new sales transaction (checkout process). Calculates totals, applies discounts and taxes,
+                processes payments, and generates transaction number.</p>
+
+            <div class="section">
+                <h3>Request Body</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>branchId</code></td>
+                            <td>UUID</td>
+                            <td><span class="required">✓ Yes</span></td>
+                            <td>Branch/store where transaction occurred</td>
+                        </tr>
+                        <tr>
+                            <td><code>customerId</code></td>
+                            <td>UUID</td>
+                            <td>No</td>
+                            <td>Customer identifier (optional for walk-in sales)</td>
+                        </tr>
+                        <tr>
+                            <td><code>transactionDate</code></td>
+                            <td>DateTime</td>
+                            <td><span class="required">✓ Yes</span></td>
+                            <td>Transaction timestamp</td>
+                        </tr>
+                        <tr>
+                            <td><code>type</code></td>
+                            <td>Enum</td>
+                            <td><span class="required">✓ Yes</span></td>
+                            <td>SALE, RETURN, EXCHANGE</td>
+                        </tr>
+                        <tr>
+                            <td><code>items</code></td>
+                            <td>Array</td>
+                            <td><span class="required">✓ Yes</span></td>
+                            <td>List of transaction items (min: 1)</td>
+                        </tr>
+                        <tr>
+                            <td><code>items[].productId</code></td>
+                            <td>UUID</td>
+                            <td><span class="required">✓ Yes</span></td>
+                            <td>Product identifier</td>
+                        </tr>
+                        <tr>
+                            <td><code>items[].productName</code></td>
+                            <td>String</td>
+                            <td><span class="required">✓ Yes</span></td>
+                            <td>Product name</td>
+                        </tr>
+                        <tr>
+                            <td><code>items[].quantity</code></td>
+                            <td>Integer</td>
+                            <td><span class="required">✓ Yes</span></td>
+                            <td>Quantity purchased</td>
+                        </tr>
+                        <tr>
+                            <td><code>items[].unitPrice</code></td>
+                            <td>Decimal</td>
+                            <td><span class="required">✓ Yes</span></td>
+                            <td>Price per unit</td>
+                        </tr>
+                        <tr>
+                            <td><code>items[].discountAmount</code></td>
+                            <td>Decimal</td>
+                            <td>No</td>
+                            <td>Item-level discount</td>
+                        </tr>
+                        <tr>
+                            <td><code>items[].taxRate</code></td>
+                            <td>Decimal</td>
+                            <td>No</td>
+                            <td>Tax rate percentage (e.g., 10.00 for 10%)</td>
+                        </tr>
+                        <tr>
+                            <td><code>discountAmount</code></td>
+                            <td>Decimal</td>
+                            <td>No</td>
+                            <td>Transaction-level discount</td>
+                        </tr>
+                        <tr>
+                            <td><code>payments</code></td>
+                            <td>Array</td>
+                            <td><span class="required">✓ Yes</span></td>
+                            <td>Payment methods used (min: 1)</td>
+                        </tr>
+                        <tr>
+                            <td><code>payments[].paymentMethod</code></td>
+                            <td>Enum</td>
+                            <td><span class="required">✓ Yes</span></td>
+                            <td>CASH, CREDIT_CARD, DEBIT_CARD, E_WALLET, BANK_TRANSFER, CHECK</td>
+                        </tr>
+                        <tr>
+                            <td><code>payments[].amount</code></td>
+                            <td>Decimal</td>
+                            <td><span class="required">✓ Yes</span></td>
+                            <td>Payment amount</td>
+                        </tr>
+                        <tr>
+                            <td><code>payments[].referenceNumber</code></td>
+                            <td>String</td>
+                            <td>No</td>
+                            <td>Payment reference/approval code</td>
+                        </tr>
+                        <tr>
+                            <td><code>cashierId</code></td>
+                            <td>UUID</td>
+                            <td>No</td>
+                            <td>Cashier/employee ID</td>
+                        </tr>
+                        <tr>
+                            <td><code>cashierName</code></td>
+                            <td>String</td>
+                            <td>No</td>
+                            <td>Cashier/employee name</td>
+                        </tr>
+                        <tr>
+                            <td><code>notes</code></td>
+                            <td>String</td>
+                            <td>No</td>
+                            <td>Additional notes or comments</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+                    {
+                    <span class="key">"branchId"</span>: <span
+                        class="string">"550e8400-e29b-41d4-a716-446655440001"</span>,
+                    <span class="key">"customerId"</span>: <span
+                        class="string">"550e8400-e29b-41d4-a716-446655440002"</span>,
+                    <span class="key">"transactionDate"</span>: <span class="string">"2025-11-20T14:30:00"</span>,
+                    <span class="key">"type"</span>: <span class="string">"SALE"</span>,
+                    <span class="key">"items"</span>: [
+                    {
+                    <span class="key">"productId"</span>: <span
+                        class="string">"550e8400-e29b-41d4-a716-446655440003"</span>,
+                    <span class="key">"productCode"</span>: <span class="string">"PROD-001"</span>,
+                    <span class="key">"productName"</span>: <span class="string">"Espresso Coffee"</span>,
+                    <span class="key">"quantity"</span>: <span class="number">2</span>,
+                    <span class="key">"unitPrice"</span>: <span class="number">45.00</span>,
+                    <span class="key">"discountAmount"</span>: <span class="number">5.00</span>,
+                    <span class="key">"taxRate"</span>: <span class="number">10.00</span>
+                    }
+                    ],
+                    <span class="key">"discountAmount"</span>: <span class="number">10.00</span>,
+                    <span class="key">"payments"</span>: [
+                    {
+                    <span class="key">"paymentMethod"</span>: <span class="string">"CASH"</span>,
+                    <span class="key">"amount"</span>: <span class="number">100.00</span>
+                    }
+                    ],
+                    <span class="key">"cashierId"</span>: <span
+                        class="string">"550e8400-e29b-41d4-a716-446655440010"</span>,
+                    <span class="key">"cashierName"</span>: <span class="string">"John Doe"</span>,
+                    <span class="key">"notes"</span>: <span class="string">"Customer requested extra receipt"</span>
+                    }
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Response Codes</h3>
+                <div class="response-codes">
+                    <div class="response-code success">
+                        <strong>201 Created</strong>
+                        <span>Transaction created successfully</span>
+                    </div>
+                    <div class="response-code client-error">
+                        <strong>400 Bad Request</strong>
+                        <span>Invalid request data</span>
+                    </div>
+                    <div class="response-code client-error">
+                        <strong>401 Unauthorized</strong>
+                        <span>Missing or invalid authentication</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Response Body (201 Created)</h3>
+                <div class="code-block">
+                    {
+                    <span class="key">"success"</span>: <span class="boolean">true</span>,
+                    <span class="key">"message"</span>: <span class="string">"Transaction created successfully"</span>,
+                    <span class="key">"data"</span>: {
+                    <span class="key">"id"</span>: <span class="string">"550e8400-e29b-41d4-a716-446655440100"</span>,
+                    <span class="key">"transactionNumber"</span>: <span
+                        class="string">"TRX-20251120-143000-ABC12345"</span>,
+                    <span class="key">"branchId"</span>: <span
+                        class="string">"550e8400-e29b-41d4-a716-446655440001"</span>,
+                    <span class="key">"customerId"</span>: <span
+                        class="string">"550e8400-e29b-41d4-a716-446655440002"</span>,
+                    <span class="key">"transactionDate"</span>: <span class="string">"2025-11-20T14:30:00"</span>,
+                    <span class="key">"status"</span>: <span class="string">"COMPLETED"</span>,
+                    <span class="key">"type"</span>: <span class="string">"SALE"</span>,
+                    <span class="key">"subtotal"</span>: <span class="number">90.00</span>,
+                    <span class="key">"taxAmount"</span>: <span class="number">8.50</span>,
+                    <span class="key">"discountAmount"</span>: <span class="number">15.00</span>,
+                    <span class="key">"totalAmount"</span>: <span class="number">83.50</span>,
+                    <span class="key">"paidAmount"</span>: <span class="number">100.00</span>,
+                    <span class="key">"changeAmount"</span>: <span class="number">16.50</span>,
+                    <span class="key">"cashierId"</span>: <span
+                        class="string">"550e8400-e29b-41d4-a716-446655440010"</span>,
+                    <span class="key">"cashierName"</span>: <span class="string">"John Doe"</span>,
+                    <span class="key">"items"</span>: [...],
+                    <span class="key">"payments"</span>: [...],
+                    <span class="key">"createdAt"</span>: <span class="string">"2025-11-20T14:30:05"</span>,
+                    <span class="key">"createdBy"</span>: <span class="string">"user-001"</span>
+                    }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Get Transaction by ID -->
+        <div class="endpoint" id="get-transaction-id">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/transactions/{id}</span>
+                <span class="badge auth">🔒 Requires Auth</span>
+            </div>
+            <p>Retrieve a specific transaction by its UUID.</p>
+
+            <div class="section">
+                <h3>Path Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>id</code></td>
+                            <td>UUID</td>
+                            <td>Transaction ID</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h3>Response Codes</h3>
+                <div class="response-codes">
+                    <div class="response-code success">
+                        <strong>200 OK</strong>
+                        <span>Transaction found</span>
+                    </div>
+                    <div class="response-code client-error">
+                        <strong>404 Not Found</strong>
+                        <span>Transaction does not exist</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Response Body (200 OK)</h3>
+                <div class="code-block">
+                    {
+                    <span class="key">"success"</span>: <span class="boolean">true</span>,
+                    <span class="key">"data"</span>: {
+                    <span class="key">"id"</span>: <span class="string">"550e8400-e29b-41d4-a716-446655440100"</span>,
+                    <span class="key">"transactionNumber"</span>: <span
+                        class="string">"TRX-20251120-143000-ABC12345"</span>,
+                    <span class="key">"status"</span>: <span class="string">"COMPLETED"</span>,
+                    <span class="key">"totalAmount"</span>: <span class="number">83.50</span>,
+                    ...
+                    }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Get Transaction by Number -->
+        <div class="endpoint" id="get-transaction-number">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/transactions/number/{transactionNumber}</span>
+                <span class="badge auth">🔒 Requires Auth</span>
+            </div>
+            <p>Retrieve a transaction by its unique transaction number.</p>
+
+            <div class="section">
+                <h3>Path Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>transactionNumber</code></td>
+                            <td>String</td>
+                            <td>Transaction number (e.g., TRX-20251120-143000-ABC12345)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h3>Response Codes</h3>
+                <div class="response-codes">
+                    <div class="response-code success">
+                        <strong>200 OK</strong>
+                        <span>Transaction found</span>
+                    </div>
+                    <div class="response-code client-error">
+                        <strong>404 Not Found</strong>
+                        <span>Transaction number does not exist</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Get All Transactions -->
+        <div class="endpoint" id="get-all-transactions">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/transactions</span>
+                <span class="badge auth">🔒 Requires Auth</span>
+            </div>
+            <p>Retrieve all transactions for the current tenant with pagination.</p>
+
+            <div class="section">
+                <h3>Query Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>page</code></td>
+                            <td>Integer</td>
+                            <td>0</td>
+                            <td>Page number (0-based)</td>
+                        </tr>
+                        <tr>
+                            <td><code>size</code></td>
+                            <td>Integer</td>
+                            <td>20</td>
+                            <td>Number of items per page</td>
+                        </tr>
+                        <tr>
+                            <td><code>sort</code></td>
+                            <td>String</td>
+                            <td>-</td>
+                            <td>Sort field and direction (e.g., transactionDate,desc)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h3>Example Request</h3>
+                <div class="code-block">
+                    GET /transactions?page=0&size=10&sort=transactionDate,desc
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Response Body (200 OK)</h3>
+                <div class="code-block">
+                    {
+                    <span class="key">"content"</span>: [...],
+                    <span class="key">"page"</span>: <span class="number">0</span>,
+                    <span class="key">"size"</span>: <span class="number">10</span>,
+                    <span class="key">"totalElements"</span>: <span class="number">145</span>,
+                    <span class="key">"totalPages"</span>: <span class="number">15</span>,
+                    <span class="key">"first"</span>: <span class="boolean">true</span>,
+                    <span class="key">"last"</span>: <span class="boolean">false</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Get Transactions by Branch -->
+        <div class="endpoint" id="get-transactions-branch">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/transactions/branch/{branchId}</span>
+                <span class="badge auth">🔒 Requires Auth</span>
+            </div>
+            <p>Retrieve transactions for a specific branch/store.</p>
+
+            <div class="section">
+                <h3>Path Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>branchId</code></td>
+                            <td>UUID</td>
+                            <td>Branch/store identifier</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h3>Query Parameters</h3>
+                <p>Supports pagination: <code>page</code>, <code>size</code>, <code>sort</code></p>
+            </div>
+        </div>
+
+        <!-- Get Transactions by Customer -->
+        <div class="endpoint" id="get-transactions-customer">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/transactions/customer/{customerId}</span>
+                <span class="badge auth">🔒 Requires Auth</span>
+            </div>
+            <p>Retrieve transaction history for a specific customer.</p>
+
+            <div class="section">
+                <h3>Path Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>customerId</code></td>
+                            <td>UUID</td>
+                            <td>Customer identifier</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h3>Query Parameters</h3>
+                <p>Supports pagination: <code>page</code>, <code>size</code>, <code>sort</code></p>
+            </div>
+        </div>
+
+        <!-- Get Transactions by Status -->
+        <div class="endpoint" id="get-transactions-status">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/transactions/status/{status}</span>
+                <span class="badge auth">🔒 Requires Auth</span>
+            </div>
+            <p>Retrieve transactions filtered by status.</p>
+
+            <div class="section">
+                <h3>Path Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>status</code></td>
+                            <td>Enum</td>
+                            <td>PENDING, COMPLETED, CANCELLED, REFUNDED</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h3>Query Parameters</h3>
+                <p>Supports pagination: <code>page</code>, <code>size</code>, <code>sort</code></p>
+            </div>
+
+            <div class="section">
+                <h3>Example Request</h3>
+                <div class="code-block">
+                    GET /transactions/status/COMPLETED?page=0&size=20
+                </div>
+            </div>
+        </div>
+
+        <!-- Get Transactions by Date Range -->
+        <div class="endpoint" id="get-transactions-daterange">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/transactions/date-range</span>
+                <span class="badge auth">🔒 Requires Auth</span>
+            </div>
+            <p>Retrieve transactions within a specific date range for reporting and analytics.</p>
+
+            <div class="section">
+                <h3>Query Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>startDate</code></td>
+                            <td>DateTime</td>
+                            <td><span class="required">✓ Yes</span></td>
+                            <td>Start of date range (ISO 8601 format)</td>
+                        </tr>
+                        <tr>
+                            <td><code>endDate</code></td>
+                            <td>DateTime</td>
+                            <td><span class="required">✓ Yes</span></td>
+                            <td>End of date range (ISO 8601 format)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h3>Example Request</h3>
+                <div class="code-block">
+                    GET /transactions/date-range?startDate=2025-11-01T00:00:00&endDate=2025-11-30T23:59:59
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Response Body (200 OK)</h3>
+                <div class="code-block">
+                    {
+                    <span class="key">"success"</span>: <span class="boolean">true</span>,
+                    <span class="key">"data"</span>: [
+                    {
+                    <span class="key">"id"</span>: <span class="string">"550e8400-e29b-41d4-a716-446655440100"</span>,
+                    <span class="key">"transactionNumber"</span>: <span
+                        class="string">"TRX-20251120-143000-ABC12345"</span>,
+                    <span class="key">"transactionDate"</span>: <span class="string">"2025-11-20T14:30:00"</span>,
+                    <span class="key">"totalAmount"</span>: <span class="number">83.50</span>,
+                    ...
+                    }
+                    ]
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Cancel Transaction -->
+        <div class="endpoint" id="cancel-transaction">
+            <div class="endpoint-header">
+                <span class="method put">PUT</span>
+                <span class="path">/transactions/{id}/cancel</span>
+                <span class="badge auth">🔒 Requires Auth</span>
+            </div>
+            <p>Cancel an existing transaction. Changes status to CANCELLED.</p>
+
+            <div class="section">
+                <h3>Path Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>id</code></td>
+                            <td>UUID</td>
+                            <td>Transaction ID to cancel</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h3>Response Codes</h3>
+                <div class="response-codes">
+                    <div class="response-code success">
+                        <strong>200 OK</strong>
+                        <span>Transaction cancelled successfully</span>
+                    </div>
+                    <div class="response-code client-error">
+                        <strong>400 Bad Request</strong>
+                        <span>Transaction already cancelled</span>
+                    </div>
+                    <div class="response-code client-error">
+                        <strong>404 Not Found</strong>
+                        <span>Transaction does not exist</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Response Body (200 OK)</h3>
+                <div class="code-block">
+                    {
+                    <span class="key">"success"</span>: <span class="boolean">true</span>,
+                    <span class="key">"message"</span>: <span class="string">"Transaction cancelled
+                        successfully"</span>,
+                    <span class="key">"data"</span>: {
+                    <span class="key">"id"</span>: <span class="string">"550e8400-e29b-41d4-a716-446655440100"</span>,
+                    <span class="key">"status"</span>: <span class="string">"CANCELLED"</span>,
+                    ...
+                    }
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>CursorPOS Transaction Service API Documentation</p>
+        <p>Generated on November 20, 2025 | Version 1.0.0</p>
+    </footer>
+</body>
+
+</html>

@@ -6,7 +6,6 @@ plugins {
 
 group = 'com.cursorpos'
 version = '1.0.0'
-sourceCompatibility = '21'
 
 configurations {
     compileOnly {

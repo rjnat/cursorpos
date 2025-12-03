@@ -37,7 +37,8 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ProductResponse>> getProductById(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<ProductResponse>> getProductById(
+            @PathVariable UUID id) {
         ProductResponse response = productService.getProductById(id);
         return ResponseEntity.ok(ApiResponse.success(response));
     }

@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: product-service-test
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:cursorpos}
+    username: ${DB_USER:posuser}
+    password: ${DB_PASSWORD:pos_db_password_2025}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+    table: flyway_schema_history_product
+  kafka:
+    enabled: false
+
+server:
+  port: 0  # Random port for tests
+
+logging:
+  level:
+    com.cursorpos: DEBUG
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+jwt:
+  secret: ${JWT_SECRET:test-secret-key-for-jwt-token-signing-minimum-256-bits-required-for-hs256-algorithm}
+  expiration: 86400000

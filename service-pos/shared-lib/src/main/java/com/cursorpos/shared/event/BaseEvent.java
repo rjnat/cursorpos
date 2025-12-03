@@ -1,6 +1,7 @@
 package com.cursorpos.shared.event;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -29,6 +30,7 @@ public abstract class BaseEvent {
     /**
      * Unique event identifier.
      */
+    @Builder.Default
     private String eventId = UUID.randomUUID().toString();
 
     /**
@@ -44,6 +46,7 @@ public abstract class BaseEvent {
     /**
      * Timestamp when event was created.
      */
+    @Builder.Default
     private Instant timestamp = Instant.now();
 
     /**
@@ -59,5 +62,6 @@ public abstract class BaseEvent {
     /**
      * Version of the event schema.
      */
+    @Builder.Default
     private String version = "1.0";
 }

@@ -3,7 +3,10 @@ package com.cursorpos.transaction.service;
 import com.cursorpos.shared.dto.PagedResponse;
 import com.cursorpos.shared.exception.ResourceNotFoundException;
 import com.cursorpos.shared.security.TenantContext;
-import com.cursorpos.transaction.dto.*;
+import com.cursorpos.transaction.dto.PaymentRequest;
+import com.cursorpos.transaction.dto.TransactionItemRequest;
+import com.cursorpos.transaction.dto.TransactionRequest;
+import com.cursorpos.transaction.dto.TransactionResponse;
 import com.cursorpos.transaction.entity.Payment;
 import com.cursorpos.transaction.entity.Transaction;
 import com.cursorpos.transaction.entity.TransactionItem;
@@ -106,18 +109,21 @@ public class TransactionService {
 
         for (PaymentRequest paymentRequest : request.getPayments()) {
             Payment payment = transactionMapper.toPayment(paymentRequest);
-            payment.setTenantId(tenantId);
             payment.setPaymentDate(LocalDateTime.now());
+            payment.setTenantId(tenantId);
             transaction.addPayment(payment);
             totalPaid = totalPaid.add(paymentRequest.getAmount());
         }
 
         transaction.setPaidAmount(totalPaid);
 
-        // Calculate change
+        // Calculate change and update status based on payment
         if (totalPaid.compareTo(totalAmount) >= 0) {
             transaction.setChangeAmount(totalPaid.subtract(totalAmount));
             transaction.setStatus(Transaction.TransactionStatus.COMPLETED);
+        } else {
+            transaction.setChangeAmount(BigDecimal.ZERO);
+            transaction.setStatus(Transaction.TransactionStatus.PENDING);
         }
 
         Objects.requireNonNull(transaction, ENTITY_NAME);
