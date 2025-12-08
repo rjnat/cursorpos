@@ -2,6 +2,11 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.7'
     id 'io.spring.dependency-management' version '1.1.4'
+    id 'jacoco'
+}
+
+jacoco {
+    toolVersion = "0.8.9"
 }
 
 group = 'com.cursorpos'
@@ -26,8 +31,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.kafka:spring-kafka'
     
     // Database
     runtimeOnly 'org.postgresql:postgresql'
@@ -35,8 +38,8 @@ dependencies {
     implementation 'org.flywaydb:flyway-database-postgresql'
     
     // MapStruct for DTO mapping
-    implementation 'org.mapstruct:mapstruct:1.6.3'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
     
     // Lombok
     compileOnly 'org.projectlombok:lombok'
@@ -45,14 +48,31 @@ dependencies {
     
     // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.kafka:spring-kafka-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:postgresql'
-    testImplementation 'org.testcontainers:kafka'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 1.0
+            }
+        }
+    }
 }

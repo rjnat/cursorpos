@@ -4,32 +4,26 @@ import com.cursorpos.shared.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.UUID;
-
 /**
- * Branch entity representing a sub-location within a store.
- * Branches allow for departmental or location-based organization within a
- * store.
+ * Branch entity representing a regional grouping within a tenant.
+ * Branches contain multiple stores and allow for regional reporting.
+ * Hierarchy: Tenant → Branch → Store
  * 
  * @author rjnat
  * @version 1.0.0
- * @since 2025-11-13
+ * @since 2025-12-04
  */
 @Entity
 @Table(name = "branches", indexes = {
-        @Index(name = "idx_branches_tenant_code", columnList = "tenant_id,code", unique = true),
-        @Index(name = "idx_branches_store_id", columnList = "store_id")
+        @Index(name = "idx_branches_tenant_id", columnList = "tenant_id"),
+        @Index(name = "idx_branches_is_active", columnList = "tenant_id, is_active")
 })
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Builder
 public class Branch extends BaseEntity {
-
-    @Column(name = "store_id", nullable = false)
-    private UUID storeId;
 
     @Column(name = "code", nullable = false, length = 50)
     private String code;
@@ -40,8 +34,26 @@ public class Branch extends BaseEntity {
     @Column(name = "description", length = 500)
     private String description;
 
-    @Column(name = "branch_type", length = 50)
-    private String branchType;
+    @Column(name = "address", length = 500)
+    private String address;
+
+    @Column(name = "city", length = 100)
+    private String city;
+
+    @Column(name = "state", length = 100)
+    private String state;
+
+    @Column(name = "country", length = 100)
+    private String country;
+
+    @Column(name = "postal_code", length = 20)
+    private String postalCode;
+
+    @Column(name = "phone", length = 20)
+    private String phone;
+
+    @Column(name = "email", length = 255)
+    private String email;
 
     @Column(name = "is_active", nullable = false)
     @Builder.Default
@@ -55,4 +67,19 @@ public class Branch extends BaseEntity {
 
     @Column(name = "manager_phone", length = 20)
     private String managerPhone;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Branch branch = (Branch) o;
+        return getId() != null && getId().equals(branch.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

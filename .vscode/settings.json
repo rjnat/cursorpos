@@ -1,0 +1,14 @@
+{
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.import.gradle.enabled": true,
+    "java.import.gradle.user.home": null,
+    "java.test.config": {
+        "workingDirectory": "${workspaceFolder}"
+    },
+    "java.test.report.position": "sideView",
+    "files.exclude": {
+        "**/build/generated": true
+    },
+    "java.errors.incompleteClasspath.severity": "ignore"
+}

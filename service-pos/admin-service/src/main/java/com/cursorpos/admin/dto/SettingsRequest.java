@@ -36,5 +36,6 @@ public class SettingsRequest {
     @Size(max = 500, message = "Description must not exceed 500 characters")
     private String description;
 
-    private Boolean isEncrypted;
+    @Builder.Default
+    private Boolean isEncrypted = false;
 }

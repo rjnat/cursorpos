@@ -52,10 +52,32 @@ public class CustomerController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    @GetMapping("/email/{email}")
+    @PreAuthorize("hasAuthority('CUSTOMER_READ')")
+    public ResponseEntity<ApiResponse<CustomerResponse>> getCustomerByEmail(@PathVariable String email) {
+        CustomerResponse response = customerService.getCustomerByEmail(email);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @GetMapping("/phone/{phone}")
+    @PreAuthorize("hasAuthority('CUSTOMER_READ')")
+    public ResponseEntity<ApiResponse<CustomerResponse>> getCustomerByPhone(@PathVariable String phone) {
+        CustomerResponse response = customerService.getCustomerByPhone(phone);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
     @GetMapping
     @PreAuthorize("hasAuthority('CUSTOMER_READ')")
     public ResponseEntity<ApiResponse<PagedResponse<CustomerResponse>>> getAllCustomers(Pageable pageable) {
         PagedResponse<CustomerResponse> response = customerService.getAllCustomers(pageable);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @GetMapping("/loyalty-tier/{tierId}")
+    @PreAuthorize("hasAuthority('CUSTOMER_READ')")
+    public ResponseEntity<ApiResponse<PagedResponse<CustomerResponse>>> getCustomersByLoyaltyTier(
+            @PathVariable UUID tierId, Pageable pageable) {
+        PagedResponse<CustomerResponse> response = customerService.getCustomersByLoyaltyTier(tierId, pageable);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
@@ -73,6 +95,20 @@ public class CustomerController {
     public ResponseEntity<ApiResponse<Void>> deleteCustomer(@PathVariable UUID id) {
         customerService.deleteCustomer(id);
         return ResponseEntity.ok(ApiResponse.success("Customer deleted successfully"));
+    }
+
+    @PostMapping("/{id}/activate")
+    @PreAuthorize("hasAuthority('CUSTOMER_UPDATE')")
+    public ResponseEntity<ApiResponse<CustomerResponse>> activateCustomer(@PathVariable UUID id) {
+        CustomerResponse response = customerService.activateCustomer(id);
+        return ResponseEntity.ok(ApiResponse.success(response, "Customer activated successfully"));
+    }
+
+    @PostMapping("/{id}/deactivate")
+    @PreAuthorize("hasAuthority('CUSTOMER_UPDATE')")
+    public ResponseEntity<ApiResponse<CustomerResponse>> deactivateCustomer(@PathVariable UUID id) {
+        CustomerResponse response = customerService.deactivateCustomer(id);
+        return ResponseEntity.ok(ApiResponse.success(response, "Customer deactivated successfully"));
     }
 
     @PostMapping("/{id}/loyalty-points")

@@ -21,6 +21,7 @@ import java.util.Objects;
 
 /**
  * Service for managing branches.
+ * Branches are regional groupings under a tenant, containing multiple stores.
  * 
  * @author rjnat
  * @version 1.0.0
@@ -79,17 +80,9 @@ public class BranchService {
     }
 
     @Transactional(readOnly = true)
-    public PagedResponse<BranchResponse> getBranchesByStore(UUID storeId, Pageable pageable) {
+    public List<BranchResponse> getActiveBranches() {
         String tenantId = TenantContext.getTenantId();
-        Page<Branch> page = branchRepository.findByTenantIdAndStoreIdAndDeletedAtIsNull(tenantId, storeId, pageable);
-        return PagedResponse.of(page.map(adminMapper::toBranchResponse));
-    }
-
-    @Transactional(readOnly = true)
-    public List<BranchResponse> getActiveBranchesByStore(UUID storeId) {
-        String tenantId = TenantContext.getTenantId();
-        List<Branch> branches = branchRepository.findByTenantIdAndStoreIdAndIsActiveAndDeletedAtIsNull(tenantId,
-                storeId, true);
+        List<Branch> branches = branchRepository.findByTenantIdAndIsActiveAndDeletedAtIsNull(tenantId, true);
         return branches.stream()
                 .map(adminMapper::toBranchResponse)
                 .toList();
@@ -126,5 +119,27 @@ public class BranchService {
         branchRepository.save(branch);
 
         log.info("Branch soft-deleted successfully with ID: {}", id);
+    }
+
+    @Transactional
+    public BranchResponse activateBranch(UUID id) {
+        String tenantId = TenantContext.getTenantId();
+        Objects.requireNonNull(id, "id");
+        Branch branch = branchRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
+                .orElseThrow(() -> new ResourceNotFoundException(BRANCH_NOT_FOUND_MSG + id));
+        branch.setIsActive(true);
+        Branch updated = branchRepository.save(branch);
+        return adminMapper.toBranchResponse(updated);
+    }
+
+    @Transactional
+    public BranchResponse deactivateBranch(UUID id) {
+        String tenantId = TenantContext.getTenantId();
+        Objects.requireNonNull(id, "id");
+        Branch branch = branchRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
+                .orElseThrow(() -> new ResourceNotFoundException(BRANCH_NOT_FOUND_MSG + id));
+        branch.setIsActive(false);
+        Branch updated = branchRepository.save(branch);
+        return adminMapper.toBranchResponse(updated);
     }
 }

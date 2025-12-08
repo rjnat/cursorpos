@@ -6,7 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.UUID;
 
 /**
  * DTO for creating a new tenant.
@@ -37,6 +39,7 @@ public class CreateTenantRequest {
     @Size(max = 50, message = "Business type must not exceed 50 characters")
     private String businessType;
 
+    @NotBlank(message = "Email is required")
     @Email(message = "Email must be valid")
     @Size(max = 255, message = "Email must not exceed 255 characters")
     private String email;
@@ -62,31 +65,34 @@ public class CreateTenantRequest {
     @Size(max = 50, message = "Tax ID must not exceed 50 characters")
     private String taxId;
 
-    @Size(max = 50, message = "Subscription plan must not exceed 50 characters")
-    private String subscriptionPlan;
+    // Subscription fields
+    private UUID subscriptionPlanId;
 
     private Instant subscriptionStartDate;
 
     private Instant subscriptionEndDate;
 
-    @Min(value = 1, message = "Max users must be at least 1")
-    private Integer maxUsers;
-
-    @Min(value = 1, message = "Max stores must be at least 1")
-    private Integer maxStores;
-
-    @Min(value = 1, message = "Max branches must be at least 1")
-    private Integer maxBranches;
-
     @Size(max = 500, message = "Logo URL must not exceed 500 characters")
     private String logoUrl;
 
     @Size(max = 50, message = "Timezone must not exceed 50 characters")
-    private String timezone;
+    @Builder.Default
+    private String timezone = "UTC";
 
     @Size(min = 3, max = 3, message = "Currency must be 3 characters (ISO 4217)")
-    private String currency;
+    @Builder.Default
+    private String currency = "USD";
 
     @Size(max = 10, message = "Locale must not exceed 10 characters")
-    private String locale;
+    @Builder.Default
+    private String locale = "en_US";
+
+    // Loyalty configuration
+    @DecimalMin(value = "0.01", message = "Loyalty points per currency must be at least 0.01")
+    @DecimalMax(value = "100.00", message = "Loyalty points per currency must not exceed 100")
+    @Builder.Default
+    private BigDecimal loyaltyPointsPerCurrency = BigDecimal.ONE;
+
+    @Builder.Default
+    private Boolean loyaltyEnabled = true;
 }

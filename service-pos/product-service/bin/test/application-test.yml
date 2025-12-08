@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:cursorpos}
     username: ${DB_USER:posuser}
-    password: ${DB_PASSWORD:pos_db_password_2025}
+    password: ${DB_PASSWORD:bootpwd}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

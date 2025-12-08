@@ -4,7 +4,9 @@ import com.cursorpos.shared.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.UUID;
 
 /**
  * Tenant entity representing a business organization.
@@ -13,18 +15,18 @@ import java.time.Instant;
  * 
  * @author rjnat
  * @version 1.0.0
- * @since 2025-11-13
+ * @since 2025-12-04
  */
 @Entity
 @Table(name = "tenants", indexes = {
         @Index(name = "idx_tenants_code", columnList = "code", unique = true),
-        @Index(name = "idx_tenants_subdomain", columnList = "subdomain", unique = true)
+        @Index(name = "idx_tenants_subdomain", columnList = "subdomain", unique = true),
+        @Index(name = "idx_tenants_subscription_plan_id", columnList = "subscription_plan_id")
 })
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Builder
 public class Tenant extends BaseEntity {
 
@@ -40,7 +42,7 @@ public class Tenant extends BaseEntity {
     @Column(name = "business_type", length = 50)
     private String businessType;
 
-    @Column(name = "email", length = 255)
+    @Column(name = "email", nullable = false, length = 255)
     private String email;
 
     @Column(name = "phone", length = 20)
@@ -68,8 +70,18 @@ public class Tenant extends BaseEntity {
     @Builder.Default
     private Boolean isActive = true;
 
-    @Column(name = "subscription_plan", length = 50)
-    private String subscriptionPlan;
+    // Subscription fields
+    @Column(name = "subscription_plan_id")
+    private UUID subscriptionPlanId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subscription_plan_id", insertable = false, updatable = false)
+    private transient SubscriptionPlan subscriptionPlan;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "subscription_status", nullable = false, length = 20)
+    @Builder.Default
+    private SubscriptionStatus subscriptionStatus = SubscriptionStatus.ACTIVE;
 
     @Column(name = "subscription_start_date")
     private Instant subscriptionStartDate;
@@ -77,15 +89,7 @@ public class Tenant extends BaseEntity {
     @Column(name = "subscription_end_date")
     private Instant subscriptionEndDate;
 
-    @Column(name = "max_users")
-    private Integer maxUsers;
-
-    @Column(name = "max_stores")
-    private Integer maxStores;
-
-    @Column(name = "max_branches")
-    private Integer maxBranches;
-
+    // Localization
     @Column(name = "logo_url", length = 500)
     private String logoUrl;
 
@@ -100,4 +104,49 @@ public class Tenant extends BaseEntity {
     @Column(name = "locale", length = 10)
     @Builder.Default
     private String locale = "en_US";
+
+    // Loyalty configuration
+    @Column(name = "loyalty_points_per_currency", precision = 5, scale = 2)
+    @Builder.Default
+    private BigDecimal loyaltyPointsPerCurrency = BigDecimal.ONE;
+
+    @Column(name = "loyalty_enabled", nullable = false)
+    @Builder.Default
+    private Boolean loyaltyEnabled = true;
+
+    /**
+     * Subscription status enum.
+     */
+    public enum SubscriptionStatus {
+        ACTIVE,
+        TRIAL,
+        EXPIRED,
+        SUSPENDED,
+        CANCELLED
+    }
+
+    /**
+     * Check if the subscription is currently active.
+     */
+    public boolean hasActiveSubscription() {
+        boolean isValidStatus = subscriptionStatus == SubscriptionStatus.ACTIVE
+                || subscriptionStatus == SubscriptionStatus.TRIAL;
+        boolean isNotExpired = subscriptionEndDate == null || !Instant.now().isAfter(subscriptionEndDate);
+        return isValidStatus && isNotExpired;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Tenant tenant = (Tenant) o;
+        return getId() != null && getId().equals(tenant.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

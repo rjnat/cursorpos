@@ -22,11 +22,16 @@ import java.util.UUID;
 public class BranchResponse {
 
     private UUID id;
-    private UUID storeId;
     private String code;
     private String name;
     private String description;
-    private String branchType;
+    private String address;
+    private String city;
+    private String state;
+    private String country;
+    private String postalCode;
+    private String phone;
+    private String email;
     private Boolean isActive;
     private String managerName;
     private String managerEmail;

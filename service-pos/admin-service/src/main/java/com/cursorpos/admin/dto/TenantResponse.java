@@ -1,10 +1,12 @@
 package com.cursorpos.admin.dto;
 
+import com.cursorpos.admin.entity.Tenant.SubscriptionStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -35,16 +37,26 @@ public class TenantResponse {
     private String postalCode;
     private String taxId;
     private Boolean isActive;
-    private String subscriptionPlan;
+
+    // Subscription fields
+    private UUID subscriptionPlanId;
+    private SubscriptionPlanResponse subscriptionPlan;
+    private SubscriptionStatus subscriptionStatus;
     private Instant subscriptionStartDate;
     private Instant subscriptionEndDate;
-    private Integer maxUsers;
-    private Integer maxStores;
-    private Integer maxBranches;
+    private Boolean hasActiveSubscription;
+
+    // Localization
     private String logoUrl;
     private String timezone;
     private String currency;
     private String locale;
+
+    // Loyalty configuration
+    private BigDecimal loyaltyPointsPerCurrency;
+    private Boolean loyaltyEnabled;
+
+    // Audit
     private Instant createdAt;
     private Instant updatedAt;
 }

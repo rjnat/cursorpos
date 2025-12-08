@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 /**
@@ -23,10 +24,8 @@ public class CustomerResponse {
 
     private UUID id;
     private String code;
-    private String customerType;
     private String firstName;
     private String lastName;
-    private String companyName;
     private String fullName;
     private String email;
     private String phone;
@@ -35,10 +34,18 @@ public class CustomerResponse {
     private String state;
     private String country;
     private String postalCode;
-    private String taxId;
+    private LocalDate dateOfBirth;
     private Boolean isActive;
-    private Integer loyaltyPoints;
     private String notes;
+
+    // Loyalty fields
+    private UUID loyaltyTierId;
+    private LoyaltyTierResponse loyaltyTier;
+    private Integer totalPoints;
+    private Integer availablePoints;
+    private Integer lifetimePoints;
+
+    // Audit
     private Instant createdAt;
     private Instant updatedAt;
 }

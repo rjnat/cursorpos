@@ -3,9 +3,9 @@ spring:
     name: identity-service-test
   
   datasource:
-    url: jdbc:postgresql://127.0.0.1:5432/cursorpos
-    username: posuser
-    password: pos_db_password_2025
+    url: jdbc:postgresql://127.0.0.1:5432/${DB_NAME:cursorpos}
+    username: ${DB_USER:posuser}
+    password: ${DB_PASSWORD:bootpwd}
     driver-class-name: org.postgresql.Driver
   
   jpa:

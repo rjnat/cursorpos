@@ -12,6 +12,7 @@ import java.util.UUID;
 
 /**
  * Repository for Branch entity.
+ * Branches are regional groupings under a tenant, containing multiple stores.
  * 
  * @author rjnat
  * @version 1.0.0
@@ -26,9 +27,11 @@ public interface BranchRepository extends JpaRepository<Branch, UUID> {
 
     Page<Branch> findByTenantIdAndDeletedAtIsNull(String tenantId, Pageable pageable);
 
-    Page<Branch> findByTenantIdAndStoreIdAndDeletedAtIsNull(String tenantId, UUID storeId, Pageable pageable);
+    Page<Branch> findByTenantIdAndIsActiveAndDeletedAtIsNull(String tenantId, Boolean isActive, Pageable pageable);
 
-    List<Branch> findByTenantIdAndStoreIdAndIsActiveAndDeletedAtIsNull(String tenantId, UUID storeId, Boolean isActive);
+    List<Branch> findByTenantIdAndIsActiveAndDeletedAtIsNull(String tenantId, Boolean isActive);
 
     boolean existsByTenantIdAndCode(String tenantId, String code);
+
+    long countByTenantIdAndDeletedAtIsNull(String tenantId);
 }

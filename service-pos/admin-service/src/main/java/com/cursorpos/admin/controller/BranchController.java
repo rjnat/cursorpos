@@ -18,6 +18,7 @@ import java.util.UUID;
 
 /**
  * REST controller for branch management.
+ * Branches are regional groupings under a tenant, containing multiple stores.
  * 
  * @author rjnat
  * @version 1.0.0
@@ -59,19 +60,10 @@ public class BranchController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    @GetMapping("/store/{storeId}")
+    @GetMapping("/active")
     @PreAuthorize("hasAuthority('BRANCH_READ')")
-    public ResponseEntity<ApiResponse<PagedResponse<BranchResponse>>> getBranchesByStore(
-            @PathVariable UUID storeId,
-            Pageable pageable) {
-        PagedResponse<BranchResponse> response = branchService.getBranchesByStore(storeId, pageable);
-        return ResponseEntity.ok(ApiResponse.success(response));
-    }
-
-    @GetMapping("/store/{storeId}/active")
-    @PreAuthorize("hasAuthority('BRANCH_READ')")
-    public ResponseEntity<ApiResponse<List<BranchResponse>>> getActiveBranchesByStore(@PathVariable UUID storeId) {
-        List<BranchResponse> response = branchService.getActiveBranchesByStore(storeId);
+    public ResponseEntity<ApiResponse<List<BranchResponse>>> getActiveBranches() {
+        List<BranchResponse> response = branchService.getActiveBranches();
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
@@ -89,5 +81,19 @@ public class BranchController {
     public ResponseEntity<ApiResponse<Void>> deleteBranch(@PathVariable UUID id) {
         branchService.deleteBranch(id);
         return ResponseEntity.ok(ApiResponse.success("Branch deleted successfully"));
+    }
+
+    @PostMapping("/{id}/activate")
+    @PreAuthorize("hasAuthority('BRANCH_UPDATE')")
+    public ResponseEntity<ApiResponse<BranchResponse>> activateBranch(@PathVariable UUID id) {
+        BranchResponse response = branchService.activateBranch(id);
+        return ResponseEntity.ok(ApiResponse.success(response, "Branch activated successfully"));
+    }
+
+    @PostMapping("/{id}/deactivate")
+    @PreAuthorize("hasAuthority('BRANCH_UPDATE')")
+    public ResponseEntity<ApiResponse<BranchResponse>> deactivateBranch(@PathVariable UUID id) {
+        BranchResponse response = branchService.deactivateBranch(id);
+        return ResponseEntity.ok(ApiResponse.success(response, "Branch deactivated successfully"));
     }
 }

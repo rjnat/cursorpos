@@ -4,25 +4,37 @@ import com.cursorpos.shared.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+import java.util.UUID;
+
 /**
  * Store entity representing a physical store location.
- * A store can have multiple branches.
+ * Stores belong to branches and can have specific pricing configurations.
+ * Hierarchy: Tenant → Branch → Store
  * 
  * @author rjnat
  * @version 1.0.0
- * @since 2025-11-13
+ * @since 2025-12-04
  */
 @Entity
 @Table(name = "stores", indexes = {
-        @Index(name = "idx_stores_tenant_code", columnList = "tenant_id,code", unique = true)
+        @Index(name = "idx_stores_tenant_id", columnList = "tenant_id"),
+        @Index(name = "idx_stores_branch_id", columnList = "branch_id"),
+        @Index(name = "idx_stores_is_active", columnList = "tenant_id, is_active")
 })
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Builder
 public class Store extends BaseEntity {
+
+    @Column(name = "branch_id", nullable = false)
+    private UUID branchId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "branch_id", insertable = false, updatable = false)
+    private Branch branch;
 
     @Column(name = "code", nullable = false, length = 50)
     private String code;
@@ -82,4 +94,31 @@ public class Store extends BaseEntity {
     @Column(name = "timezone", length = 50)
     @Builder.Default
     private String timezone = "UTC";
+
+    @Column(name = "currency", length = 3)
+    @Builder.Default
+    private String currency = "USD";
+
+    @Column(name = "tax_rate", precision = 5, scale = 2)
+    @Builder.Default
+    private BigDecimal taxRate = BigDecimal.ZERO;
+
+    @Column(name = "global_discount_percentage", precision = 5, scale = 2)
+    @Builder.Default
+    private BigDecimal globalDiscountPercentage = BigDecimal.ZERO;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Store store = (Store) o;
+        return getId() != null && getId().equals(store.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

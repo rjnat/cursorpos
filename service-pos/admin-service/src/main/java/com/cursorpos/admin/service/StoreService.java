@@ -4,6 +4,7 @@ import com.cursorpos.admin.dto.CreateStoreRequest;
 import com.cursorpos.admin.dto.StoreResponse;
 import com.cursorpos.admin.entity.Store;
 import com.cursorpos.admin.mapper.AdminMapper;
+import com.cursorpos.admin.repository.BranchRepository;
 import com.cursorpos.admin.repository.StoreRepository;
 import com.cursorpos.shared.dto.PagedResponse;
 import com.cursorpos.shared.exception.ResourceNotFoundException;
@@ -15,11 +16,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.Objects;
 
 /**
  * Service for managing stores.
+ * Stores belong to branches and can have specific pricing configurations.
  * 
  * @author rjnat
  * @version 1.0.0
@@ -33,16 +36,22 @@ public class StoreService {
     private static final String STORE_NOT_FOUND_MSG = "Store not found with ID: ";
 
     private final StoreRepository storeRepository;
+    private final BranchRepository branchRepository;
     private final AdminMapper adminMapper;
 
     @Transactional
     public StoreResponse createStore(CreateStoreRequest request) {
+        Objects.requireNonNull(request, "request");
         String tenantId = TenantContext.getTenantId();
         log.info("Creating store with code: {} for tenant: {}", request.getCode(), tenantId);
 
         if (storeRepository.existsByTenantIdAndCode(tenantId, request.getCode())) {
             throw new IllegalArgumentException("Store with code " + request.getCode() + " already exists");
         }
+
+        // Validate branch exists
+        branchRepository.findByIdAndTenantIdAndDeletedAtIsNull(request.getBranchId(), tenantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Branch not found with ID: " + request.getBranchId()));
 
         Store store = adminMapper.toStore(request);
         store.setTenantId(tenantId);
@@ -76,13 +85,39 @@ public class StoreService {
         return PagedResponse.of(page.map(adminMapper::toStoreResponse));
     }
 
+    @Transactional(readOnly = true)
+    public PagedResponse<StoreResponse> getStoresByBranch(UUID branchId, Pageable pageable) {
+        String tenantId = TenantContext.getTenantId();
+        Page<Store> page = storeRepository.findByTenantIdAndBranchIdAndDeletedAtIsNull(tenantId, branchId, pageable);
+        return PagedResponse.of(page.map(adminMapper::toStoreResponse));
+    }
+
+    @Transactional(readOnly = true)
+    public List<StoreResponse> getActiveStoresByBranch(UUID branchId) {
+        String tenantId = TenantContext.getTenantId();
+        List<Store> stores = storeRepository.findByTenantIdAndBranchIdAndIsActiveAndDeletedAtIsNull(
+                tenantId, branchId, true);
+        return stores.stream()
+                .map(adminMapper::toStoreResponse)
+                .toList();
+    }
+
     @Transactional
     public StoreResponse updateStore(UUID id, CreateStoreRequest request) {
         String tenantId = TenantContext.getTenantId();
         log.info("Updating store with ID: {} for tenant: {}", id, tenantId);
+        Objects.requireNonNull(id, "id");
+        Objects.requireNonNull(request, "request");
 
         Store store = storeRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
                 .orElseThrow(() -> new ResourceNotFoundException(STORE_NOT_FOUND_MSG + id));
+
+        // Validate branch exists if changed
+        if (request.getBranchId() != null && !request.getBranchId().equals(store.getBranchId())) {
+            branchRepository.findByIdAndTenantIdAndDeletedAtIsNull(request.getBranchId(), tenantId)
+                    .orElseThrow(
+                            () -> new ResourceNotFoundException("Branch not found with ID: " + request.getBranchId()));
+        }
 
         adminMapper.updateStoreFromRequest(request, store);
         Objects.requireNonNull(store, "store");
@@ -96,6 +131,7 @@ public class StoreService {
     public void deleteStore(UUID id) {
         String tenantId = TenantContext.getTenantId();
         log.info("Deleting store with ID: {} for tenant: {}", id, tenantId);
+        Objects.requireNonNull(id, "id");
 
         Store store = storeRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
                 .orElseThrow(() -> new ResourceNotFoundException(STORE_NOT_FOUND_MSG + id));
@@ -104,5 +140,27 @@ public class StoreService {
         storeRepository.save(store);
 
         log.info("Store soft-deleted successfully with ID: {}", id);
+    }
+
+    @Transactional
+    public StoreResponse activateStore(UUID id) {
+        String tenantId = TenantContext.getTenantId();
+        Objects.requireNonNull(id, "id");
+        Store store = storeRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
+                .orElseThrow(() -> new ResourceNotFoundException(STORE_NOT_FOUND_MSG + id));
+        store.setIsActive(true);
+        Store updated = storeRepository.save(store);
+        return adminMapper.toStoreResponse(updated);
+    }
+
+    @Transactional
+    public StoreResponse deactivateStore(UUID id) {
+        String tenantId = TenantContext.getTenantId();
+        Objects.requireNonNull(id, "id");
+        Store store = storeRepository.findByIdAndTenantIdAndDeletedAtIsNull(id, tenantId)
+                .orElseThrow(() -> new ResourceNotFoundException(STORE_NOT_FOUND_MSG + id));
+        store.setIsActive(false);
+        Store updated = storeRepository.save(store);
+        return adminMapper.toStoreResponse(updated);
     }
 }

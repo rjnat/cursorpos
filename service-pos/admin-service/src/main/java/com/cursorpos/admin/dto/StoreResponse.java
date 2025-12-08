@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -22,6 +23,8 @@ import java.util.UUID;
 public class StoreResponse {
 
     private UUID id;
+    private UUID branchId;
+    private String branchName;
     private String code;
     private String name;
     private String description;
@@ -41,6 +44,9 @@ public class StoreResponse {
     private String managerPhone;
     private String operatingHours;
     private String timezone;
+    private String currency;
+    private BigDecimal taxRate;
+    private BigDecimal globalDiscountPercentage;
     private Instant createdAt;
     private Instant updatedAt;
 }

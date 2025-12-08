@@ -6,8 +6,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 /**
  * DTO for creating a new customer.
+ * Customers are tenant-wide (shared across all stores).
  * 
  * @author rjnat
  * @version 1.0.0
@@ -23,18 +26,12 @@ public class CreateCustomerRequest {
     @Size(max = 50, message = "Code must not exceed 50 characters")
     private String code;
 
-    @NotBlank(message = "Customer type is required")
-    @Pattern(regexp = "^(INDIVIDUAL|BUSINESS)$", message = "Customer type must be INDIVIDUAL or BUSINESS")
-    private String customerType;
-
+    @NotBlank(message = "First name is required")
     @Size(max = 100, message = "First name must not exceed 100 characters")
     private String firstName;
 
     @Size(max = 100, message = "Last name must not exceed 100 characters")
     private String lastName;
-
-    @Size(max = 200, message = "Company name must not exceed 200 characters")
-    private String companyName;
 
     @Email(message = "Email must be valid")
     @Size(max = 255, message = "Email must not exceed 255 characters")
@@ -58,8 +55,8 @@ public class CreateCustomerRequest {
     @Size(max = 20, message = "Postal code must not exceed 20 characters")
     private String postalCode;
 
-    @Size(max = 50, message = "Tax ID must not exceed 50 characters")
-    private String taxId;
+    @Past(message = "Date of birth must be in the past")
+    private LocalDate dateOfBirth;
 
     private String notes;
 }

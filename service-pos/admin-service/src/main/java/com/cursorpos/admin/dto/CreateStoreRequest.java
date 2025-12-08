@@ -6,8 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.util.UUID;
+
 /**
  * DTO for creating a new store.
+ * Stores belong to branches and can have specific pricing configurations.
  * 
  * @author rjnat
  * @version 1.0.0
@@ -18,6 +22,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateStoreRequest {
+
+    @NotNull(message = "Branch ID is required")
+    private UUID branchId;
 
     @NotBlank(message = "Code is required")
     @Size(max = 50, message = "Code must not exceed 50 characters")
@@ -77,4 +84,15 @@ public class CreateStoreRequest {
 
     @Size(max = 50, message = "Timezone must not exceed 50 characters")
     private String timezone;
+
+    @Size(min = 3, max = 3, message = "Currency must be 3 characters (ISO 4217)")
+    private String currency;
+
+    @DecimalMin(value = "0.00", message = "Tax rate must be zero or positive")
+    @DecimalMax(value = "100.00", message = "Tax rate must not exceed 100")
+    private BigDecimal taxRate;
+
+    @DecimalMin(value = "0.00", message = "Global discount must be zero or positive")
+    @DecimalMax(value = "100.00", message = "Global discount must not exceed 100")
+    private BigDecimal globalDiscountPercentage;
 }

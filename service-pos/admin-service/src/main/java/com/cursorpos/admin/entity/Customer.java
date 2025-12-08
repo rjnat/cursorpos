@@ -4,43 +4,41 @@ import com.cursorpos.shared.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.util.UUID;
+
 /**
  * Customer entity representing a customer of the business.
- * Customers can be individuals or organizations.
+ * Customers are tenant-wide (shared across all stores under the tenant).
+ * Includes loyalty program fields.
  * 
  * @author rjnat
  * @version 1.0.0
- * @since 2025-11-13
+ * @since 2025-12-04
  */
 @Entity
 @Table(name = "customers", indexes = {
-        @Index(name = "idx_customers_tenant_email", columnList = "tenant_id,email"),
-        @Index(name = "idx_customers_tenant_phone", columnList = "tenant_id,phone"),
-        @Index(name = "idx_customers_tenant_code", columnList = "tenant_id,code", unique = true)
+        @Index(name = "idx_customers_tenant_id", columnList = "tenant_id"),
+        @Index(name = "idx_customers_tenant_email", columnList = "tenant_id, email"),
+        @Index(name = "idx_customers_tenant_phone", columnList = "tenant_id, phone"),
+        @Index(name = "idx_customers_loyalty_tier", columnList = "tenant_id, loyalty_tier_id"),
+        @Index(name = "idx_customers_total_points", columnList = "tenant_id, total_points")
 })
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Builder
 public class Customer extends BaseEntity {
 
     @Column(name = "code", nullable = false, length = 50)
     private String code;
 
-    @Column(name = "customer_type", nullable = false, length = 20)
-    @Builder.Default
-    private String customerType = "INDIVIDUAL";
-
-    @Column(name = "first_name", length = 100)
+    @Column(name = "first_name", nullable = false, length = 100)
     private String firstName;
 
     @Column(name = "last_name", length = 100)
     private String lastName;
-
-    @Column(name = "company_name", length = 200)
-    private String companyName;
 
     @Column(name = "email", length = 255)
     private String email;
@@ -63,27 +61,58 @@ public class Customer extends BaseEntity {
     @Column(name = "postal_code", length = 20)
     private String postalCode;
 
-    @Column(name = "tax_id", length = 50)
-    private String taxId;
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
 
     @Column(name = "is_active", nullable = false)
     @Builder.Default
     private Boolean isActive = true;
 
-    @Column(name = "loyalty_points")
-    @Builder.Default
-    private Integer loyaltyPoints = 0;
-
     @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;
+
+    // Loyalty fields
+    @Column(name = "loyalty_tier_id")
+    private UUID loyaltyTierId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "loyalty_tier_id", insertable = false, updatable = false)
+    private LoyaltyTier loyaltyTier;
+
+    @Column(name = "total_points", nullable = false)
+    @Builder.Default
+    private Integer totalPoints = 0;
+
+    @Column(name = "available_points", nullable = false)
+    @Builder.Default
+    private Integer availablePoints = 0;
+
+    @Column(name = "lifetime_points", nullable = false)
+    @Builder.Default
+    private Integer lifetimePoints = 0;
 
     /**
      * Gets the full name of the customer.
      */
     public String getFullName() {
-        if (customerType.equals("INDIVIDUAL")) {
+        if (lastName != null && !lastName.isBlank()) {
             return firstName + " " + lastName;
         }
-        return companyName;
+        return firstName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Customer customer = (Customer) o;
+        return getId() != null && getId().equals(customer.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
